@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <!-- 自动扫描controller包下的所有类，使其认为spring mvc的控制器 -->
+    <context:component-scan base-package="com.elling.*.controller"/>
+    <!--开启注解 -->
+    <mvc:annotation-driven/>
+    <!-- springmvc传json值时的乱码解决 -->
+    <!-- <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven> -->
+    <!-- 设置配置方案 -->
+	<mvc:annotation-driven>
+		<!-- 不使用默认的消息转换器 -->
+		<mvc:message-converters register-defaults="true">
+			<!-- 配置Spring的转换器 -->
+	    		<!-- 配置fastjson中实现HttpMessageConverter接口的转换器 -->
+		    	<bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+	    			<!-- 加入支持的媒体类型，返回contentType -->
+	    			<property name="supportedMediaTypes">
+	    				<list>
+	    					<value>text/html;charset=UTF-8</value>
+		    				<value>application/json;charset=UTF-8</value>
+	    				</list>
+	    			</property>
+	    			<property name="features">
+                    <list>
+                    <!-- 默认的意思就是不配置这个属性，配置了就不是默认了 -->
+                       <!-- 是否输出值为null的字段 ，默认是false-->
+                        <value>WriteMapNullValue</value>
+                         
+                        <value>WriteNullNumberAsZero</value>
+                        <value>WriteNullListAsEmpty</value>
+                        <value>WriteNullStringAsEmpty</value>
+                        <value>WriteNullBooleanAsFalse</value>
+                        <value>WriteDateUseDateFormat</value>
+                     
+                    </list>
+                </property>
+		    	</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+
+    <!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
+    <!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        路径的前缀
+        <property name="prefix" value="/WEB-INF/page/"/>
+        路径的后缀
+        <property name="suffix" value=".jsp"/>
+    </bean> -->
+
+    <!-- 文件上传配置 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 默认编码 -->
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!-- 上传文件大小限制为31M，31*1024*1024 -->
+        <property name="maxUploadSize" value="32505856"/>
+        <!-- 内存中的最大值 -->
+        <property name="maxInMemorySize" value="4096"/>
+    </bean>
+
+    <!--将静态资源交由默认的servlet处理-->
+    <mvc:default-servlet-handler/>
+
+    <!--重要！将你的SwaggerConfig配置类注入-->
+    <!-- <bean class="com.item1024.config.swaggerConfig"/> -->
+
+</beans>
