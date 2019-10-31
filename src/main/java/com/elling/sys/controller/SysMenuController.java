@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.elling.common.entity.Result;
+import com.elling.common.entity.TreeNode;
 import com.elling.common.utils.StringUtil;
+import com.elling.goods.controller.GCatalogController;
+import com.elling.goods.model.GCatalog;
 import com.elling.sys.model.SysMenu;
 import com.elling.sys.service.SysMenuService;
 import com.github.pagehelper.PageHelper;
@@ -29,7 +33,7 @@ import tk.mybatis.mapper.entity.Example.Criteria;
 @RestController
 @RequestMapping("/sysMenu/")
 public class SysMenuController {
-
+	private static Logger logger = Logger.getLogger(GCatalogController.class);
     @Autowired
     SysMenuService sysMenuService;
 
@@ -46,6 +50,7 @@ public class SysMenuController {
     		sysMenuService.deleteByIds(ids);
     	}catch(Exception e) {
     		e.printStackTrace();
+    		logger.error(e.getMessage());
     		return Result.error(e.getMessage());
     	}
 	    return Result.success();
@@ -53,13 +58,25 @@ public class SysMenuController {
     
     @RequestMapping("delete")
     public Result delete(@RequestParam Integer id) {
-	    sysMenuService.deleteById(id);
+    	try {
+    		sysMenuService.deleteById(id);
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error(e.getMessage());
+    	}
 	    return Result.success();
     }
 
     @RequestMapping("update")
     public Result update(@RequestBody SysMenu sysMenu) {
-	    sysMenuService.update(sysMenu);
+    	try {
+    		sysMenuService.update(sysMenu);
+	    }catch(Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return Result.error(e.getMessage());
+		}
 	    return Result.success();
     }
 
@@ -67,6 +84,22 @@ public class SysMenuController {
     public Result detail(Long id) {
         SysMenu sysMenu = sysMenuService.findById(id);
         return Result.success(sysMenu);
+    }
+    
+    @RequestMapping("getByCondition")
+    public Result getByCondition(SysMenu sysMenu) {
+    	Map rMap = null;
+    	try {
+    		List<Map<String,Object>> list = sysMenuService.getByCondition(sysMenu);
+    		if(list!=null && list.size()>0) {
+    			rMap = list.get(0);
+    		}
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error(e.getMessage());
+    	}
+        return Result.success(rMap);
     }
 
     @RequestMapping("list")
@@ -83,6 +116,7 @@ public class SysMenuController {
 	        SysMenu sysMenu = sysMenuService.findBy(colomnName, colomnVal);
 	        return Result.success(sysMenu);
         }catch(Exception e){
+        	logger.error(e.getMessage());
         	return Result.error(e.getMessage());
         }
     }
@@ -113,6 +147,7 @@ public class SysMenuController {
     		return Result.success(pageInfo);
     	}catch(Exception e) {
     		e.printStackTrace();
+    		logger.error(e.getMessage());
     		return Result.error(e.getMessage());
     	}
     }
@@ -129,7 +164,17 @@ public class SysMenuController {
     	System.out.println(list);
     	return Result.success(list);
     }
-    
+    @RequestMapping("getMenuTree")
+    public Result getCatalogTree(SysMenu sysMenu) {
+    	try {
+    		List<TreeNode> menuTree = sysMenuService.getMenuTree(sysMenu);
+    		return Result.success(menuTree);
+	    }catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error(e.getMessage());
+    	}
+    }
     /**
      * .获取所有的菜单信息
      * @param sysMenu

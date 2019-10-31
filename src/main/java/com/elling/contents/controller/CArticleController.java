@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.elling.common.utils.DateUtil;
 import com.elling.common.utils.StringUtil;
 import com.elling.common.entity.Result;
 
@@ -35,6 +37,7 @@ public class CArticleController {
     @RequestMapping("add")
     public Result add(@RequestBody CArticle cArticle) {
     	try {
+    		cArticle.setCreateTime(DateUtil.getNowTime());
 	        cArticleService.save(cArticle);
 	    }catch(Exception e) {
     		e.printStackTrace();
@@ -72,6 +75,7 @@ public class CArticleController {
     @RequestMapping("update")
     public Result update(CArticle cArticle) {
     	try {
+    		cArticle.setUpdateTime(DateUtil.getNowTime());
 		    cArticleService.update(cArticle);
 		}catch(Exception e) {
     		e.printStackTrace();

@@ -49,4 +49,14 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
 		return resulList;
 	}
 
+	@Override
+	public List<TreeNode> getMenuTree(SysMenu sysMenu) {
+		return sysMenuMapper.getMenuTree(sysMenu);
+	}
+
+	@Override
+	public List<Map<String,Object>> getByCondition(SysMenu sysMenu) {
+		return sysMenuMapper.getByCondition(sysMenu);
+	}
+
 }
