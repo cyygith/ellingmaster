@@ -1,22 +1,28 @@
 package com.elling.contents.controller;
 import com.elling.contents.model.CArticle;
 import com.elling.contents.service.CArticleService;
+import com.elling.goods.model.GGoods;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import org.apache.log4j.Logger;
 import java.util.List;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.elling.common.utils.DateUtil;
 import com.elling.common.utils.StringUtil;
+import com.elling.common.constant.Config;
 import com.elling.common.entity.Result;
 
 import tk.mybatis.mapper.entity.Condition;
@@ -151,5 +157,46 @@ public class CArticleController {
     		e.printStackTrace();
     		return Result.error(e.getMessage());
     	}
+    }
+    
+    /**
+     * 保存图片并且返回图片的相对地址，
+     * 比如图片放在d:/upload/20191101/test.jpg中，则这里的imgUrl则为20191101/test.jpg
+     * 然后再tomcat（window）或者nginx（linux）中配置图片服务器的地址，
+     * 则访问该图片为：http://localhost:8080/upload/20191101/test.jpg
+     * @param file
+     * @return
+     */
+    @RequestMapping("uploadImage")
+    public Result uploadImge(@RequestParam("images") MultipartFile[] file) {
+    	StringBuffer imgUrl = new StringBuffer();//种类的imgUrl是相对地址，比如图片放在d:/upload/20191101/test.jpg中，则这里的imgUrl则为20191101/test.jpg
+    	try {
+    		String UPLOAD_URL = Config.getConf("upload.url");
+    		String separator = File.separator;
+    		String dateSuffix = DateUtil.getNowDate1();
+    		String baseDir = separator + "ARTICLE" + separator + dateSuffix + separator;//地址：/ARTICLE/20191101/
+    		String filePath = UPLOAD_URL+ baseDir ;//完整地址：D:/UPLOAD/ARTICLE/20191101/
+    		File dir = new File(filePath);
+			if(!dir.exists()) {
+				boolean b = dir.mkdirs();
+				logger.info("目录是否创建成功"+b+",路径："+filePath);
+				System.out.println("是否创建成功："+b);
+			}
+			
+			String filename = "";
+			imgUrl.append("ARTICLE/").append(dateSuffix).append("/");
+			for(int i=0;i<file.length;i++) {
+				MultipartFile filetemp = file[i];
+				filename = filetemp.getOriginalFilename();
+				filetemp.transferTo(new File(filePath+filename));
+				imgUrl.append(filename);
+			}
+			System.out.println("保存成功"+imgUrl);
+			
+    	}catch(Exception e) {
+    		logger.error(e.getMessage());
+    		return Result.error();
+    	}
+    	return Result.success(imgUrl);
     }
 }
