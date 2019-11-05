@@ -39,7 +39,20 @@ public class CArticleController {
 	
     @Autowired
     CArticleService cArticleService;
-
+    
+    @RequestMapping("addHtml")
+    public Result addHtml(@RequestBody CArticle cArticle) {
+    	try {
+    		cArticle.setCreateTime(DateUtil.getNowTime());
+	        cArticleService.save(cArticle);
+	    }catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error(e.getMessage());
+    	}
+	    return Result.success();
+    }
+    
     @RequestMapping("add")
     public Result add(@RequestBody CArticle cArticle) {
     	try {
