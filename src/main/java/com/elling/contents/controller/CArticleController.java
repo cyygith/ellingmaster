@@ -92,7 +92,7 @@ public class CArticleController {
     }
 
     @RequestMapping("update")
-    public Result update(CArticle cArticle) {
+    public Result update(@RequestBody CArticle cArticle) {
     	try {
     		cArticle.setUpdateTime(DateUtil.getNowTime());
 		    cArticleService.update(cArticle);
