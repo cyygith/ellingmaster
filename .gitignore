@@ -1,8 +1,5 @@
 /classes/
 target/
 script/
-.classpath
-.project
-.settings
 .myeclipse
 *.class

@@ -4,8 +4,8 @@ import java.util.Map;
 
 import com.elling.common.base.Service;
 import com.elling.common.entity.TreeNode;
-import com.elling.goods.model.GCatalog;
 import com.elling.sys.model.SysMenu;
+import com.github.pagehelper.PageInfo;
 
 /**
  *
@@ -16,7 +16,7 @@ public interface SysMenuService extends Service<SysMenu> {
 	 * .获取菜单层级
 	 * @return
 	 */
-	public List<SysMenu> getMenuLevel(SysMenu sysMenu);
+	public List<SysMenu> getMenuLevel(Map map);
 	
 	/**
 	 * 获取左边菜单数据，根据传入角色id进行筛选

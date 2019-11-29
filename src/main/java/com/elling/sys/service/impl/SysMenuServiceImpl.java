@@ -25,8 +25,8 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
     private SysMenuMapper sysMenuMapper;
 
 	@Override
-	public List<SysMenu> getMenuLevel(SysMenu sysMenu) {
-		return sysMenuMapper.getMenuLevel(sysMenu);
+	public List<SysMenu> getMenuLevel(Map map) {
+		return sysMenuMapper.getMenuLevel(map);
 	}
 	
 	/**

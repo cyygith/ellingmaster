@@ -10,7 +10,8 @@ import com.elling.sys.model.SysMenu;
 
 public interface SysMenuMapper extends MyMapper<SysMenu> {
 	
-	public List<SysMenu> getMenuLevel(SysMenu sysMenu);
+	public List<SysMenu> getMenuLevel(Map map);
+	public Integer getMenuLevelCount(Map map);
 	
 	/**
 	 * 根据角色ID获取对应拥有的菜单信息

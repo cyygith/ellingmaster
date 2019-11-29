@@ -17,6 +17,7 @@ import com.elling.common.entity.TreeNode;
 import com.elling.common.utils.StringUtil;
 import com.elling.goods.controller.GCatalogController;
 import com.elling.goods.model.GCatalog;
+import com.elling.sys.model.SysDict;
 import com.elling.sys.model.SysMenu;
 import com.elling.sys.service.SysMenuService;
 import com.github.pagehelper.PageHelper;
@@ -103,11 +104,18 @@ public class SysMenuController {
     }
 
     @RequestMapping("list")
-    public PageInfo list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
-        PageHelper.startPage(page, size);
-        List<SysMenu> list = sysMenuService.findAll();
-        PageInfo pageInfo = new PageInfo(list);
-        return pageInfo;
+    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+        PageInfo pageInfo = null;
+        try {
+	        PageHelper.startPage(page, size);
+	        List<SysMenu> list = sysMenuService.findAll();
+	        pageInfo = new PageInfo(list);
+	    }catch(Exception e) {
+    	   e.printStackTrace();
+	   	   logger.error(e.getMessage());
+	   	   return Result.error(e.getMessage());
+       	}
+        return Result.success(pageInfo);
     }
     
     @RequestMapping("getByColumn")
@@ -153,9 +161,33 @@ public class SysMenuController {
     }
     
     @RequestMapping("getMenuLevel")
-    public Result getMenuLevel(@RequestBody SysMenu sysMenu) {
-    	List<SysMenu> list = sysMenuService.getMenuLevel(sysMenu);
-    	return Result.success(list);
+    public Result getMenuLevel(@RequestBody Map map) {
+		PageInfo pageInfo = null;
+	    try {
+	    	int page = map.get("page")==null?1:(Integer.parseInt(StringUtil.getString(map.get("page"))));
+    		int size = map.get("size")==null?10:(Integer.parseInt(StringUtil.getString(map.get("size"))));
+    		
+ 	        PageHelper.startPage(page, size);
+    		List<SysMenu> list = sysMenuService.getMenuLevel(map);
+    		pageInfo = new PageInfo(list);
+ 	    }catch(Exception e) {
+     	   e.printStackTrace();
+ 	   	   logger.error(e.getMessage());
+ 	   	   return Result.error(e.getMessage());
+        	}
+         return Result.success(pageInfo);
+    }
+    @RequestMapping("getLevelTree")
+    public Result getLevelTree(@RequestBody Map map) {
+	    try {
+    		List<SysMenu> list = sysMenuService.getMenuLevel(map);
+    		return Result.success(list);
+ 	    }catch(Exception e) {
+     	   e.printStackTrace();
+ 	   	   logger.error(e.getMessage());
+ 	   	   return Result.error(e.getMessage());
+        }
+        
     }
     
     @RequestMapping("getMenuData")
