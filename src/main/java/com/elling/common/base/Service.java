@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Service 层 基础接口，其他Service 接口 请继承该接口
- * Created by zhh on 2017/09/18.
+ * Created by cyy on 2019/12/24
  */
 public interface Service<T> {
 	

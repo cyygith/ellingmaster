@@ -16,6 +16,7 @@ public class StringUtil {
 		}
 		return true;
 	}
+	
 	/**
 	 * .获取内容
 	 * @return
