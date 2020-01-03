@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elling.accbook.dao.mapper.AccBookMapper">
+  <resultMap id="BaseResultMap" type="com.elling.accbook.model.AccBook">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="TYPE" jdbcType="CHAR" property="type" />
+    <result column="MONEY" jdbcType="VARCHAR" property="money" />
+    <result column="TIME" jdbcType="VARCHAR" property="time" />
+    <result column="MARK" jdbcType="VARCHAR" property="mark" />
+    <result column="CATEGORY" jdbcType="CHAR" property="category" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <resultMap id="customerMap" type="java.util.HashMap">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="TYPE" jdbcType="CHAR" property="type" />
+    <result column="MONEY" jdbcType="VARCHAR" property="money" />
+    <result column="TIME" jdbcType="VARCHAR" property="time" />
+    <result column="MARK" jdbcType="VARCHAR" property="mark" />
+    <result column="CATEGORY" jdbcType="CHAR" property="category" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <!--根据自定义条件查询-->
+  <select id="getByCondition" resultMap="customerMap">
+	    SELECT
+			T.* 
+		FROM
+			ACC_BOOK T
+		<where>
+			<if test="id!=null and id != ''">T.ID = #{id}</if>
+			<if test="type!=null and type != ''">T.TYPE = #{type}</if>
+			<if test="money!=null and money != ''">T.MONEY = #{money}</if>
+			<if test="time!=null and time != ''">T.TIME = #{time}</if>
+			<if test="mark!=null and mark != ''">T.MARK = #{mark}</if>
+			<if test="category!=null and category != ''">T.CATEGORY = #{category}</if>
+			<if test="createTime!=null and createTime != ''">T.CREATE_TIME = #{createTime}</if>
+			<if test="updateTime!=null and updateTime != ''">T.UPDATE_TIME = #{updateTime}</if>
+		</where>
+  </select>
+</mapper>
