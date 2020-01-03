@@ -19,8 +19,8 @@ import freemarker.template.Configuration;
 public class MapperGenerator extends CodeManager implements ICode{
 
 	@Override
-	public void genCode(ToolGenCode toolGenCode) {
-//		String templatePath = "/src/test/resources/template/backTemplate";
+	public String genCode(ToolGenCode toolGenCode) {
+		StringBuffer returnMsg = new StringBuffer();
 		String templatePath = toolGenCode.getTemplateFilePath();
 		String modelName = "";
 		String tableName = toolGenCode.getTableName();
@@ -52,10 +52,14 @@ public class MapperGenerator extends CodeManager implements ICode{
 			}
 			cfg.getTemplate("mapper.ftl").process(data, new FileWriter(serviceFile));
 			logger.info(modelNameUpperCamel + "Mapper.java 生成成功!");
-			
+			returnMsg.append(modelNameUpperCamel+"Mapper.java 生成成功!");
 		} catch (Exception e) {
-			throw new RuntimeException("Mapper.java 生成失败!", e);
+//			throw new RuntimeException("Mapper.java 生成失败!", e);
+			returnMsg.append(modelNameUpperCamel+"Mapper.java 生成失败!");
+			e.printStackTrace();
 		}
+		
+		return returnMsg.toString();
 	}
 
 	@Override

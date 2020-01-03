@@ -29,7 +29,8 @@ import com.elling.tool.model.ToolGenCode;
 public class ModelAndMapperGenerator extends CodeManager implements ICode{
 
 	@Override
-	public void genCode(ToolGenCode toolGenCode) {
+	public String genCode(ToolGenCode toolGenCode) {
+		StringBuffer returnMsg = new StringBuffer();
 		String modelName = "";
 		String tableName = toolGenCode.getTableName();
 		String sign = CodeUtils.getTableNameSplit(tableName)[1];
@@ -47,12 +48,18 @@ public class ModelAndMapperGenerator extends CodeManager implements ICode{
 			warnings = new ArrayList<String>();
 			generator = new MyBatisGenerator(cfg, callback, warnings);
 			generator.generate(null);
+			returnMsg.append("Model 生成成功");
 		} catch (Exception e) {
-			throw new RuntimeException("Model 和  Mapper 生成失败!", e);
+//			throw new RuntimeException("Model 和  Mapper 生成失败!", e);
+			returnMsg.append("Model 生成失败");
+			logger.error("Model 和  Mapper 生成失败! "+warnings);
+			e.printStackTrace();
 		}
 		
 		if (generator == null || generator.getGeneratedJavaFiles().isEmpty() || generator.getGeneratedXmlFiles().isEmpty()) {
-			throw new RuntimeException("Model 和  Mapper 生成失败, warnings: " + warnings);
+			//throw new RuntimeException("Model 和  Mapper 生成失败, warnings: " + warnings);
+			logger.error("Model 和  Mapper 生成失败, warnings: "+warnings);
+			returnMsg.append("Model 生成失败");
 		}
 		
 		if (StringUtils.isNullOrEmpty(modelName)) {
@@ -62,6 +69,8 @@ public class ModelAndMapperGenerator extends CodeManager implements ICode{
 		logger.info(modelName, "{}.java 生成成功!");
 		logger.info(modelName, "{}Mapper.java 生成成功!");
 		logger.info(modelName, "{}Mapper.xml 生成成功!");
+		
+		return returnMsg.toString();
 	}
 	
 	/**
@@ -83,11 +92,11 @@ public class ModelAndMapperGenerator extends CodeManager implements ICode{
 	        javaModelGeneratorConfiguration.setTargetPackage(toolGenCode.getModelPackage());
 	        context.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
 	        
-	        JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
-	        javaClientGeneratorConfiguration.setTargetProject(PROJECT_PATH + toolGenCode.getJavaPath());
-	        javaClientGeneratorConfiguration.setTargetPackage(toolGenCode.getMapperPackage());
-	        javaClientGeneratorConfiguration.setConfigurationType("XMLMAPPER");
-	        context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
+//	        JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
+//	        javaClientGeneratorConfiguration.setTargetProject(PROJECT_PATH + toolGenCode.getJavaPath());
+//	        javaClientGeneratorConfiguration.setTargetPackage(toolGenCode.getMapperPackage());
+//	        javaClientGeneratorConfiguration.setConfigurationType("XMLMAPPER");
+//	        context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
 	        
 	        TableConfiguration tableConfiguration = new TableConfiguration(context);
 	        tableConfiguration.setTableName(tableName);

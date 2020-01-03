@@ -22,7 +22,7 @@
   <!--根据自定义条件查询-->
   <select id="getByCondition" resultMap="customerMap">
 	    SELECT
-			T.* 
+			<include refid="BaseColumn"/>
 		FROM
 			${tableName} T
 		<where>
@@ -31,4 +31,7 @@
 			</#list>
 		</where>
   </select>
+  <sql id="BaseColumn">
+  		<#list colsEntity as result><#if (result_index)=(colsEntityNoKey?size)>${result.colunm}<#else>${result.colunm},</#if></#list>
+  </sql>
 </mapper>

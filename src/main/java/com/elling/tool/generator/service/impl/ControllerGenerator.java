@@ -19,8 +19,8 @@ import freemarker.template.Configuration;
 public class ControllerGenerator extends CodeManager implements ICode {
 
 	@Override
-	public void genCode(ToolGenCode toolGenCode) {
-		String templatePath = toolGenCode.getTemplateFilePath();
+	public String genCode(ToolGenCode toolGenCode) {
+		StringBuffer returnMsg = new StringBuffer();
 		String modelName = "";
 		String tableName = toolGenCode.getTableName();
 		String sign = CodeUtils.getTableNameSplit(tableName)[1];
@@ -49,10 +49,14 @@ public class ControllerGenerator extends CodeManager implements ICode {
 	        }
 	        cfg.getTemplate("controller.ftl").process(data, new FileWriter(controllerFile));
 			logger.info(modelNameUpperCamel + "Controller.java 生成成功!");
+			returnMsg.append(modelNameUpperCamel + "Controller.java 生成成功!");
 		} catch (Exception e) {
-			throw new RuntimeException("Controller 生成失败!", e);
+//			throw new RuntimeException("Controller 生成失败!", e);
+			returnMsg.append(modelNameUpperCamel+"Controller 生成失败!");
+			e.printStackTrace();
 		}
 		
+		return returnMsg.toString();
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public interface ICode {
 	 * @param modelName 自定义实体类名, 为null则默认将表名下划线转成大驼峰形式
 	 * @param sign 区分字段, 规定如表 sys_dict_manager, 则 dict 即为区分字段
 	 */
-	void genCode(ToolGenCode toolGenCode);
+	String genCode(ToolGenCode toolGenCode);
 	/**
 	 * 初始化数据
 	 */

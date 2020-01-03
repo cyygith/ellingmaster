@@ -36,6 +36,7 @@ public class ToolGenCodeController {
     
     @RequestMapping("runTool")
     public Result runTool(@RequestBody Map map) {
+    	StringBuffer sb = new StringBuffer();
     	try {
     		String ids = StringUtil.getString(map.get("ids"));
     		if(ids.trim().equals(""))
@@ -67,7 +68,8 @@ public class ToolGenCodeController {
         				}
         				
         				IRunCode runCode = (IRunCode)newObject;
-        				runCode.runCode(gen);
+        				String rtnStr = runCode.runCode(gen);
+        				sb.append(rtnStr);
         				
         				gen.setRunTime(DateUtil.getNowTime());
         				gen.setRunCount(gen.getRunCount()+1);
@@ -83,7 +85,9 @@ public class ToolGenCodeController {
     		logger.error(e.getMessage());
     		return Result.error(e.getMessage());
     	}
-	    return Result.success();
+    	System.out.println("生成情况如下：");
+    	System.out.println(sb.toString());
+	    return Result.success(sb);
     }
     
     @RequestMapping("add")
@@ -201,7 +205,6 @@ public class ToolGenCodeController {
     		
     		Condition condition = new Condition(ToolGenCode.class);
     		Criteria criteria  = condition.createCriteria();
-    		
     		Iterator it = map.entrySet().iterator();
     		while(it.hasNext()) {
     			Map.Entry<String,Object> entry = (Map.Entry)it.next();
@@ -211,6 +214,7 @@ public class ToolGenCodeController {
     				criteria.andEqualTo(key, value);
     			}
     		}
+    		condition.setOrderByClause("ID DESC");
     		
     		PageHelper.startPage(page, size);
     		List<ToolGenCode> list = toolGenCodeService.findByCondition(condition);

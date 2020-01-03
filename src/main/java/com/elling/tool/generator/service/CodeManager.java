@@ -32,6 +32,7 @@ protected static final Logger logger = LoggerFactory.getLogger(CodeManager.class
 	// 项目在硬盘上的基础路径
 	//protected static final String PROJECT_PATH = System.getProperty("user.dir");
 	protected static String  PROJECT_PATH;//System.getProperty("user.dir");
+	protected static String TEMPLATE_PATH;//模板地址，判断传入的模板文件夹是否与缓存的模板文件夹是否相同，不同则重新初始化
 	/**
 	 * 获取 Freemarker 模板环境配置
 	 * path : 模板的地址，配置在config.properties中也可以，也可以自己输入
@@ -39,7 +40,7 @@ protected static final Logger logger = LoggerFactory.getLogger(CodeManager.class
 	 */
 	public Configuration getFreemarkerConfiguration(ToolGenCode toolGenCode) {
 		PROJECT_PATH = toolGenCode.getProjectPath();
-		if (configuration == null) {
+		if (configuration == null||(!TEMPLATE_PATH.equals(toolGenCode.getTemplateFilePath()))) {
 			configuration = initFreemarkerConfiguration(toolGenCode);
 		}
 		return configuration;
@@ -53,7 +54,8 @@ protected static final Logger logger = LoggerFactory.getLogger(CodeManager.class
 	private Configuration initFreemarkerConfiguration(ToolGenCode toolGenCode) {
 		Configuration cfg = null;
 		try {
-			String path = toolGenCode.getTemplateFilePath();//如果有，则传入，如果没有，则使用配置文件中默认配置的模板地址
+			String path = toolGenCode.getTemplateFilePath();
+			TEMPLATE_PATH = path;
 			cfg = new Configuration(Configuration.VERSION_2_3_23);
 //			cfg.setDirectoryForTemplateLoading(new File(PROJECT_PATH+path));
 			cfg.setDirectoryForTemplateLoading(new File(path));
@@ -77,19 +79,19 @@ protected static final Logger logger = LoggerFactory.getLogger(CodeManager.class
         context.addProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_ALL_COMMENTS, "true");
         
         JDBCConnectionConfiguration jdbcConnectionConfiguration = new JDBCConnectionConfiguration();
-        jdbcConnectionConfiguration.setConnectionURL(toolGenCode.getJdbcUrl());
-        jdbcConnectionConfiguration.setUserId(toolGenCode.getJdbcUsername());
-        jdbcConnectionConfiguration.setPassword(toolGenCode.getJdbcPassword());
-        jdbcConnectionConfiguration.setDriverClass(toolGenCode.getJdbcDriverClassName());
+        jdbcConnectionConfiguration.setConnectionURL(GenConfig.getConf("jdbc.url"));
+        jdbcConnectionConfiguration.setUserId(GenConfig.getConf("jdbc.username)"));
+        jdbcConnectionConfiguration.setPassword(GenConfig.getConf("jdbc.password"));
+        jdbcConnectionConfiguration.setDriverClass(GenConfig.getConf("jdbc.driver.class.name"));
         context.setJdbcConnectionConfiguration(jdbcConnectionConfiguration);
         
-        SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
-        sqlMapGeneratorConfiguration.setTargetProject(PROJECT_PATH + toolGenCode.getResourcesPath());
-        sqlMapGeneratorConfiguration.setTargetPackage("mapper." + toolGenCode.getBaseModel());
-        context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
+//        SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
+//        sqlMapGeneratorConfiguration.setTargetProject(PROJECT_PATH + toolGenCode.getResourcesPath());
+//        sqlMapGeneratorConfiguration.setTargetPackage("mapper." + toolGenCode.getBaseModel());
+//        context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
         
         // 增加 mapper 插件
-        addMapperPlugin(context);
+//        addMapperPlugin(context);
         
 		return context;
 	}

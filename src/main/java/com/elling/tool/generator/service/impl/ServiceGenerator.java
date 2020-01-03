@@ -23,8 +23,9 @@ import freemarker.template.Configuration;
 public class ServiceGenerator extends CodeManager implements ICode{
 
 	@Override
-	public void genCode(ToolGenCode toolGenCode) {
-		String templatePath = toolGenCode.getTemplateFilePath();
+	public String genCode(ToolGenCode toolGenCode) {
+		StringBuffer returnMsg = new StringBuffer();
+		
 		String modelName = "";
 		String tableName = toolGenCode.getTableName();
 		String sign = CodeUtils.getTableNameSplit(tableName)[1];
@@ -54,6 +55,7 @@ public class ServiceGenerator extends CodeManager implements ICode{
 			}
 			cfg.getTemplate("service.ftl").process(data, new FileWriter(serviceFile));
 			logger.info(modelNameUpperCamel + "Service.java 生成成功!");
+			returnMsg.append(modelNameUpperCamel + "Service.java 生成成功!");
 			
 			// 创建 Service 接口的实现类
 			String serviceImplPath = PROJECT_PATH+javaPath+CodeUtils.packageConvertPath(toolGenCode.getServiceImplPackage());
@@ -64,9 +66,15 @@ public class ServiceGenerator extends CodeManager implements ICode{
 			}
 			cfg.getTemplate("service-impl.ftl").process(data, new FileWriter(serviceImplFile));
 			logger.info(modelNameUpperCamel + "ServiceImpl.java 生成成功!");
+			returnMsg.append(" "+modelNameUpperCamel + "ServiceImpl.java 生成成功");
 		} catch (Exception e) {
-			throw new RuntimeException("Service 生成失败!", e);
+			returnMsg.append("Service 生成失败");
+			logger.error("Service 生成失败");
+			e.printStackTrace();
+//			throw new RuntimeException("Service 生成失败!", e);
 		}
+		
+		return returnMsg.toString();
 	}
 
 	@Override

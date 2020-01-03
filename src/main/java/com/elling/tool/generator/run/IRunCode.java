@@ -8,7 +8,7 @@ import com.elling.tool.model.ToolGenCode;
  */
 public interface IRunCode {
 	
-	public void runCode(ToolGenCode toolGenCode) throws Exception;
+	public String runCode(ToolGenCode toolGenCode) throws Exception;
 	
 	
 }

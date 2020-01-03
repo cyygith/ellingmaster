@@ -16,14 +16,16 @@ public class FrontEndRunImpl implements IRunCode {
 	 * @param args
 	 */
 	@Override
-	public void runCode(ToolGenCode toolGenCode) throws Exception{
+	public String runCode(ToolGenCode toolGenCode) throws Exception{
 		String[] tableNames = toolGenCode.getRunTable().split(",");
-		
+		StringBuffer sb = new StringBuffer();
 		for(String tableName:tableNames) {
 			toolGenCode.setTableName(tableName);
-			new ListAndManGenerator().genCode(toolGenCode);//生成xxxList.vue和xxxManager.vue的文件
+			sb.append(new ListAndManGenerator().genCode(toolGenCode)).append("/r/n");//生成xxxList.vue和xxxManager.vue的文件
+			System.out.println("表："+tableName+"的执行情况如下："+sb.toString());
 		}
-		System.out.println("执行成功");
+		
+		return sb.toString();
 	}
 
 }
