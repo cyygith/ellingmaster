@@ -30,6 +30,10 @@ public class AccBook {
      * 备注
      */
     private String mark;
+    /**
+     * 用户ID
+     */
+    private String userId;
 
     /**
      * 类别 001-生活 002-蔬菜等
@@ -191,4 +195,14 @@ public class AccBook {
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+    
+    
 }

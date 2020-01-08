@@ -10,6 +10,7 @@
     <result column="CATEGORY" jdbcType="CHAR" property="category" />
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
   </resultMap>
   <resultMap id="customerMap" type="java.util.HashMap">
     <id column="ID" jdbcType="BIGINT" property="id" />
@@ -20,6 +21,7 @@
     <result column="CATEGORY" jdbcType="CHAR" property="category" />
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
   </resultMap>
   <!--根据自定义条件查询-->
   <select id="getByCondition" resultMap="customerMap">

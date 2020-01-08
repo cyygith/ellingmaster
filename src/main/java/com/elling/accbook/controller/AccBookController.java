@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.elling.common.utils.DateUtil;
 import com.elling.common.utils.StringUtil;
 import com.elling.common.entity.Result;
 
@@ -35,6 +37,7 @@ public class AccBookController {
     @RequestMapping("add")
     public Result add(@RequestBody AccBook accBook) {
     	try {
+    		accBook.setCreateTime(DateUtil.getNowTime());
 	        accBookService.save(accBook);
 	    }catch(Exception e) {
     		e.printStackTrace();
@@ -72,6 +75,7 @@ public class AccBookController {
     @RequestMapping("update")
     public Result update(@RequestBody AccBook accBook) {
     	try {
+    		accBook.setUpdateTime(DateUtil.getNowTime());
 		    accBookService.update(accBook);
 		}catch(Exception e) {
     		e.printStackTrace();
