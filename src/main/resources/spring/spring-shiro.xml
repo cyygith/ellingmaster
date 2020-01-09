@@ -26,6 +26,7 @@
 				/static/** = anon
 				/gCatalogNoAuth/** = anon
 				/gGoodsNoAuth/** = anon
+				/accBook/** = anon
 				/** = authc
 				<!-- /** = authc -->
 			</value>

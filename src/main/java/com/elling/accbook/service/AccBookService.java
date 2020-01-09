@@ -17,4 +17,11 @@ public interface AccBookService extends Service<AccBook> {
 	 * @return
 	 */
 	public List<Map<String,Object>> getByCondition(AccBook accBook);
+	
+	/**
+	 *	根据类型和时间获取总结数
+	 * @param map
+	 * @return
+	 */
+	public List<Map<String,Object>> getSumByTypeAndTime(Map map);
 }

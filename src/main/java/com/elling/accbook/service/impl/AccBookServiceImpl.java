@@ -24,4 +24,9 @@ public class AccBookServiceImpl extends AbstractService<AccBook> implements AccB
 	public List<Map<String,Object>> getByCondition(AccBook accBook) {
 		return accBookMapper.getByCondition(accBook);
 	}
+	
+	@Override
+	public List<Map<String,Object>> getSumByTypeAndTime(Map map){
+		return accBookMapper.getSumByTypeAndTime(map);
+	};
 }

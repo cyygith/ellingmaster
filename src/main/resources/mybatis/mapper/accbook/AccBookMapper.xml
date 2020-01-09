@@ -35,9 +35,25 @@
 			<if test="money!=null and money != ''">T.MONEY = #{money}</if>
 			<if test="time!=null and time != ''">T.TIME = #{time}</if>
 			<if test="mark!=null and mark != ''">T.MARK = #{mark}</if>
+			<if test="userId!=null and userId != ''">T.USER_ID = #{userId}</if>
 			<if test="category!=null and category != ''">T.CATEGORY = #{category}</if>
 			<if test="createTime!=null and createTime != ''">T.CREATE_TIME = #{createTime}</if>
 			<if test="updateTime!=null and updateTime != ''">T.UPDATE_TIME = #{updateTime}</if>
 		</where>
   </select>
+  <select id="getSumByTypeAndTime" resultMap="map">
+  		SELECT CASE TYPE
+				WHEN '0' THEN
+					'收入'
+				ELSE
+					'支出'
+				END TYPE_NAME,
+				 TYPE,
+				 TIME,
+				 SUM(CONVERT (MONEY, DECIMAL(10, 2)))
+				FROM ACC_BOOK
+				GROUP BY TYPE,TIME
+				ORDER BY TIME DESC
+  </select>
+  
 </mapper>

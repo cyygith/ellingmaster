@@ -171,4 +171,28 @@ public class AccBookController {
     		return Result.error(e.getMessage());
     	}
     }
+    
+    @RequestMapping("getListByTime")
+    public Result getListByTime(@RequestBody Map map) {
+    	try {
+    		int page = map.get("page")==null?1:(Integer.parseInt(StringUtil.getString(map.get("page"))));
+    		int size = map.get("size")==null?10:(Integer.parseInt(StringUtil.getString(map.get("size"))));
+    		map.remove("page");
+    		map.remove("size");
+    		
+    		Condition condition = new Condition(AccBook.class);
+    		condition.setOrderByClause("time,create_time desc");
+    		Criteria criteria  = condition.createCriteria();
+    		
+    		PageHelper.startPage(page, size);
+    		List<AccBook> list = accBookService.findByCondition(condition);
+    		List<Map<String,Object>> sumList = accBookService.getSumByTypeAndTime(map);
+            PageInfo pageInfo = new PageInfo(list);
+    		return Result.success(pageInfo,sumList);
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error(e.getMessage());
+    	}
+    }
 }
