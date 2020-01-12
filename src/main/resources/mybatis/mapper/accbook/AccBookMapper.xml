@@ -26,7 +26,7 @@
   <!--根据自定义条件查询-->
   <select id="getByCondition" resultMap="customerMap">
 	    SELECT
-			T.* 
+			T.TYPE,T.MONEY,T.TIME,T.MARK,T.USER_ID,T.CATALOG 
 		FROM
 			ACC_BOOK T
 		<where>
@@ -41,19 +41,44 @@
 			<if test="updateTime!=null and updateTime != ''">T.UPDATE_TIME = #{updateTime}</if>
 		</where>
   </select>
-  <select id="getSumByTypeAndTime" resultMap="map">
-  		SELECT CASE TYPE
-				WHEN '0' THEN
-					'收入'
-				ELSE
-					'支出'
-				END TYPE_NAME,
-				 TYPE,
-				 TIME,
-				 SUM(CONVERT (MONEY, DECIMAL(10, 2)))
-				FROM ACC_BOOK
-				GROUP BY TYPE,TIME
-				ORDER BY TIME DESC
+  <select id="getSumByTypeAndTime" resultType="java.util.HashMap">
+  		SELECT
+			CASE T.TYPE
+		WHEN '0' THEN
+			'收入'
+		ELSE
+			'支出'
+		END TYPE_NAME,
+		 T.TYPE,
+		 <if test="day!=null and day!= ''">DATE_FORMAT(T.TIME, '%Y-%m-%d') TIME,</if>
+		 <if test="month!=null and month!= ''">DATE_FORMAT(T.TIME, '%Y-%m') TIME,</if>
+		 <if test="year!=null and year!= ''">DATE_FORMAT(T.TIME, '%Y') TIME,</if>
+		 SUM(CONVERT (T.MONEY, DECIMAL(10, 2))) SUM
+		FROM
+			ACC_BOOK T
+		<where>
+			<if test="day!=null and day!= ''">DATE_FORMAT(T.time, '%Y-%m') = #{day}</if>
+			<if test="month!=null and month!= ''">DATE_FORMAT(T.time, '%Y-%m') = #{month}</if>
+			<if test="year!=null and year!=''">DATE_FORMAT(T.time, '%Y') = #{year}</if>
+		</where>
+		GROUP BY
+			T.TYPE,
+			<if test="day!=null and day!=''">DATE_FORMAT(T.TIME, '%Y-%m-%d')</if>
+		 	<if test="month!=null and month!=''">DATE_FORMAT(T.TIME, '%Y-%m')</if>
+		 	<if test="year!=null and year!=''">DATE_FORMAT(T.TIME, '%Y')</if>
+		ORDER BY
+			TIME DESC
   </select>
-  
+  <select id="getDayOfMonth" resultType="java.util.HashMap">
+	  	SELECT
+			DATE_FORMAT(T.TIME, '%Y-%m-%d') TIME
+		FROM
+			ACC_BOOK T
+		WHERE
+			DATE_FORMAT(T.time, '%Y-%m') = #{month}
+		GROUP BY
+			DATE_FORMAT(T.TIME, '%Y-%m-%d')
+		ORDER BY
+			TIME DESC
+  </select>
 </mapper>

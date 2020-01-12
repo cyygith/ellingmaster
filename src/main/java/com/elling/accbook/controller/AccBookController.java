@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.apache.log4j.Logger;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +79,24 @@ public class AccBookController {
     	try {
     		accBook.setUpdateTime(DateUtil.getNowTime());
 		    accBookService.update(accBook);
+		}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error(e.getMessage());
+    	}
+	    return Result.success();
+    }
+    
+    @RequestMapping("saveOrUpdate")
+    public Result saveOrupdate(@RequestBody AccBook accBook) {
+    	try {
+    		if(accBook.getId()!=null) {
+    			accBook.setUpdateTime(DateUtil.getNowTime());
+    			accBookService.update(accBook);
+    		}else {
+    			accBook.setCreateTime(DateUtil.getNowTime());
+    	        accBookService.save(accBook);
+    		}
 		}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
@@ -175,20 +195,70 @@ public class AccBookController {
     @RequestMapping("getListByTime")
     public Result getListByTime(@RequestBody Map map) {
     	try {
-    		int page = map.get("page")==null?1:(Integer.parseInt(StringUtil.getString(map.get("page"))));
-    		int size = map.get("size")==null?10:(Integer.parseInt(StringUtil.getString(map.get("size"))));
-    		map.remove("page");
-    		map.remove("size");
+    		String month = map.get("searchTime")+"";
+    		if(month==null||month.equals("")) month = DateUtil.getNowYearAndMonth();
+    		
     		
     		Condition condition = new Condition(AccBook.class);
     		condition.setOrderByClause("time,create_time desc");
     		Criteria criteria  = condition.createCriteria();
+    		criteria.andCondition("DATE_FORMAT(time,'%Y-%m')='"+month+"'");
     		
-    		PageHelper.startPage(page, size);
     		List<AccBook> list = accBookService.findByCondition(condition);
-    		List<Map<String,Object>> sumList = accBookService.getSumByTypeAndTime(map);
-            PageInfo pageInfo = new PageInfo(list);
-    		return Result.success(pageInfo,sumList);
+    		Map dMap = new HashMap();
+    		dMap.put("day", month);   		
+    		List<Map<String,Object>> dayList = accBookService.getSumByTypeAndTime(dMap);
+    		
+    		Map mMap = new HashMap();
+    		mMap.put("month", month);
+    		List<Map<String,Object>> monthList = accBookService.getSumByTypeAndTime(mMap);
+    		
+    		//总共的时间天数问题
+    		Map dmMap = new HashMap();
+    		dmMap.put("month", month);
+    		List<Map<String,Object>> dayOfmonthList = accBookService.getDayOfMonth(dmMap);
+    		
+    		//每天详细数据
+    		Map<String,ArrayList> timeMap = new HashMap<String,ArrayList>();
+    		list.forEach(item->{
+    			String itime = item.getTime();
+    			if(timeMap.get(itime)==null) {
+    				ArrayList<AccBook> ll = new ArrayList<AccBook>();
+    				ll.add(item);
+    				timeMap.put(itime, ll);
+    			}else {
+    				timeMap.get(itime).add(item);
+    			}
+    		});
+    		
+    		//当天总计
+    		Map<String,Map> sumMap = new HashMap<String,Map>();
+    		dayList.forEach(item->{
+    			String itime = item.get("TIME").toString()+"_day_sum";
+    			if(sumMap.get(itime)==null) {
+    				Map tmp = new HashMap();
+    				tmp.put(item.get("TYPE"), item.get("SUM"));
+    				sumMap.put(itime, tmp);
+    			}else {
+    				sumMap.get(itime).put(item.get("TYPE"), item.get("SUM"));
+    			}
+    		});
+    		//当月总计
+    		Map<String,String> monthSumMap = new HashMap<String,String>();
+    		monthList.forEach(item->{
+    			String type = item.get("TYPE")+"";
+    			String money = item.get("SUM")+"";
+    			if(type.equals("0")) monthSumMap.put("out", money);
+    			if(type.equals("1")) monthSumMap.put("in", money);
+    		});
+    		
+    		Map resultMap = new HashMap();
+    		resultMap.put("dayOfmonthList", dayOfmonthList);
+    		resultMap.put("timeMap", timeMap);
+    		resultMap.put("sumMap", sumMap);
+    		resultMap.put("monthSumMap", monthSumMap);
+    		
+    		return Result.success(resultMap);
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());

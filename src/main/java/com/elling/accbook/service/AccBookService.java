@@ -24,4 +24,11 @@ public interface AccBookService extends Service<AccBook> {
 	 * @return
 	 */
 	public List<Map<String,Object>> getSumByTypeAndTime(Map map);
+	
+	/**
+	 *	根据月份获取日期
+	 * @param map
+	 * @return
+	 */
+	public List<Map<String,Object>> getDayOfMonth(Map map);
 }

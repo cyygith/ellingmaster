@@ -29,4 +29,9 @@ public class AccBookServiceImpl extends AbstractService<AccBook> implements AccB
 	public List<Map<String,Object>> getSumByTypeAndTime(Map map){
 		return accBookMapper.getSumByTypeAndTime(map);
 	};
+	
+	@Override
+	public List<Map<String,Object>> getDayOfMonth(Map map){
+		return accBookMapper.getDayOfMonth(map);
+	};
 }
