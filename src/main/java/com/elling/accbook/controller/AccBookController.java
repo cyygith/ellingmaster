@@ -50,7 +50,7 @@ public class AccBookController {
     }
 
     @RequestMapping("delete")
-    public Result delete(Integer id) {
+    public Result delete(@RequestParam Integer id) {
     	try {
 		    accBookService.deleteById(id);
 		}catch(Exception e) {
