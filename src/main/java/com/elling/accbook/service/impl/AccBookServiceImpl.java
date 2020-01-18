@@ -33,5 +33,11 @@ public class AccBookServiceImpl extends AbstractService<AccBook> implements AccB
 	@Override
 	public List<Map<String,Object>> getDayOfMonth(Map map){
 		return accBookMapper.getDayOfMonth(map);
+	}
+
+	@Override
+	public Map<String, Object> getSumDayAndSumCount() {
+		return accBookMapper.getSumDayAndSumCount();
 	};
+	
 }

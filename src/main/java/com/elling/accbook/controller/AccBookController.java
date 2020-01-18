@@ -265,4 +265,17 @@ public class AccBookController {
     		return Result.error(e.getMessage());
     	}
     }
+    
+    @RequestMapping("getAllSummary")
+    public Result getAllSummary(@RequestBody Map map) {
+    	try {
+    		Map resultMap = accBookService.getSumDayAndSumCount();
+    		return Result.success(resultMap);
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error(e.getMessage());
+    	}
+    }
+    
 }

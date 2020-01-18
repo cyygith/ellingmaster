@@ -31,4 +31,11 @@ public interface AccBookService extends Service<AccBook> {
 	 * @return
 	 */
 	public List<Map<String,Object>> getDayOfMonth(Map map);
+	
+	/**
+	 *	获取记账总笔数和记账总天数
+	 * @param map
+	 * @return
+	 */
+	public Map<String,Object> getSumDayAndSumCount();
 }

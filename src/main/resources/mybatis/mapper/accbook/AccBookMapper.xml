@@ -81,4 +81,11 @@
 		ORDER BY
 			TIME DESC
   </select>
+  <select id="getSumDayAndSumCount" resultType="java.util.HashMap">
+  		SELECT
+			COUNT(1) SUMDAY,
+			SUM(A.JZS) SUMCOUNT 
+		FROM
+			(SELECT T.TIME, COUNT(1) JZS FROM ACC_BOOK T GROUP BY T.TIME ) A
+  </select>
 </mapper>

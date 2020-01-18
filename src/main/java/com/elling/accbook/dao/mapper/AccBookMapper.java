@@ -27,4 +27,10 @@ public interface AccBookMapper extends MyMapper<AccBook> {
 	 * @return
 	 */
 	public List<Map<String,Object>> getDayOfMonth(Map map);
+	
+	/**
+	 * 获取记账总笔数和记账总天数
+	 * @return
+	 */
+	public Map<String,Object> getSumDayAndSumCount();
 }
