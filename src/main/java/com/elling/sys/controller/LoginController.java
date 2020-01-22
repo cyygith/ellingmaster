@@ -67,12 +67,15 @@ public class LoginController {
 			logger.error("Account is exist");
 			return Result.error("账户不存在");
 		}catch(IncorrectCredentialsException e) {
+			e.printStackTrace();
 			logger.error("username and password is not matched");
 			return Result.error("用户名和密码不正确");
 		}catch(LockedAccountException e) {
+			e.printStackTrace();
 			logger.error("Account is been lock");
 			return Result.error("账户被锁定");
 		}catch(Exception e) {
+			e.addSuppressed(e);
 			logger.error("Other reason Error" + e.getMessage());
 			return Result.error("登录失败，请联系管理员");
 		}

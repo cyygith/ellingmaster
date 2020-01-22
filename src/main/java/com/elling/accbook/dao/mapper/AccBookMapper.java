@@ -32,5 +32,5 @@ public interface AccBookMapper extends MyMapper<AccBook> {
 	 * 获取记账总笔数和记账总天数
 	 * @return
 	 */
-	public Map<String,Object> getSumDayAndSumCount();
+	public Map<String,Object> getSumDayAndSumCount(Map map);
 }

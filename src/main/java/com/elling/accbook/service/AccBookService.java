@@ -37,5 +37,5 @@ public interface AccBookService extends Service<AccBook> {
 	 * @param map
 	 * @return
 	 */
-	public Map<String,Object> getSumDayAndSumCount();
+	public Map<String,Object> getSumDayAndSumCount(Map map);
 }

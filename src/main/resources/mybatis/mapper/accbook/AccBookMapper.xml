@@ -57,9 +57,10 @@
 		FROM
 			ACC_BOOK T
 		<where>
-			<if test="day!=null and day!= ''">DATE_FORMAT(T.time, '%Y-%m') = #{day}</if>
-			<if test="month!=null and month!= ''">DATE_FORMAT(T.time, '%Y-%m') = #{month}</if>
-			<if test="year!=null and year!=''">DATE_FORMAT(T.time, '%Y') = #{year}</if>
+			<if test="day!=null and day!= ''">AND DATE_FORMAT(T.time, '%Y-%m') = #{day}</if>
+			<if test="month!=null and month!= ''">AND DATE_FORMAT(T.time, '%Y-%m') = #{month}</if>
+			<if test="year!=null and year!=''">AND DATE_FORMAT(T.time, '%Y') = #{year}</if>
+			<if test="userId!=null and userId!=''">AND USER_ID = #{userId}</if>
 		</where>
 		GROUP BY
 			T.TYPE,
@@ -76,6 +77,7 @@
 			ACC_BOOK T
 		WHERE
 			DATE_FORMAT(T.time, '%Y-%m') = #{month}
+			<if test="userId!=null and userId!=''">AND USER_ID = #{userId}</if>
 		GROUP BY
 			DATE_FORMAT(T.TIME, '%Y-%m-%d')
 		ORDER BY
@@ -84,8 +86,19 @@
   <select id="getSumDayAndSumCount" resultType="java.util.HashMap">
   		SELECT
 			COUNT(1) SUMDAY,
-			SUM(A.JZS) SUMCOUNT 
+			SUM(A.JZS) SUMCOUNT
 		FROM
-			(SELECT T.TIME, COUNT(1) JZS FROM ACC_BOOK T GROUP BY T.TIME ) A
+			(
+				SELECT
+					T.TIME,
+					COUNT(1) JZS
+				FROM
+					ACC_BOOK T
+				<where>
+					<if test="userId!=null and userId!=''">USER_ID = #{userId}</if>
+				</where>
+				GROUP BY
+					T.TIME
+			) A
   </select>
 </mapper>

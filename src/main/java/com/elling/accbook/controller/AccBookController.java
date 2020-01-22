@@ -196,26 +196,31 @@ public class AccBookController {
     public Result getListByTime(@RequestBody Map map) {
     	try {
     		String month = map.get("searchTime")+"";
+    		String userId = map.get("userId")+"";
     		if(month==null||month.equals("")) month = DateUtil.getNowYearAndMonth();
     		
     		
     		Condition condition = new Condition(AccBook.class);
     		condition.setOrderByClause("time,create_time desc");
     		Criteria criteria  = condition.createCriteria();
+    		criteria.andEqualTo("userId", userId);
     		criteria.andCondition("DATE_FORMAT(time,'%Y-%m')='"+month+"'");
     		
     		List<AccBook> list = accBookService.findByCondition(condition);
     		Map dMap = new HashMap();
-    		dMap.put("day", month);   		
+    		dMap.put("day", month); 
+    		dMap.put("userId", userId);
     		List<Map<String,Object>> dayList = accBookService.getSumByTypeAndTime(dMap);
     		
     		Map mMap = new HashMap();
     		mMap.put("month", month);
+    		mMap.put("userId", userId);
     		List<Map<String,Object>> monthList = accBookService.getSumByTypeAndTime(mMap);
     		
     		//总共的时间天数问题
     		Map dmMap = new HashMap();
     		dmMap.put("month", month);
+    		dmMap.put("userId", userId);
     		List<Map<String,Object>> dayOfmonthList = accBookService.getDayOfMonth(dmMap);
     		
     		//每天详细数据
@@ -269,7 +274,7 @@ public class AccBookController {
     @RequestMapping("getAllSummary")
     public Result getAllSummary(@RequestBody Map map) {
     	try {
-    		Map resultMap = accBookService.getSumDayAndSumCount();
+    		Map resultMap = accBookService.getSumDayAndSumCount(map);
     		return Result.success(resultMap);
     	}catch(Exception e) {
     		e.printStackTrace();

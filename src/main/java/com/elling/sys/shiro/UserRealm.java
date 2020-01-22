@@ -21,6 +21,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.elling.common.constant.Constants;
+import com.elling.common.utils.StringUtil;
 import com.elling.sys.model.SysRole;
 import com.elling.sys.model.SysUser;
 import com.elling.sys.service.SysRoleService;
@@ -67,7 +68,7 @@ public class UserRealm extends AuthorizingRealm{
             if(user == null){
                 throw new UnknownAccountException("账户不存在");
             }
-            if(!Constants.STATE_OK.equals(user.getStatus().toString())){
+            if(!Constants.STATE_OK.equals(StringUtil.getString(user.getStatus()))){
                 throw new LockedAccountException("账户被锁定");
             }
             //返回，并判断密码

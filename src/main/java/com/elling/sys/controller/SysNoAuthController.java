@@ -35,7 +35,7 @@ public class SysNoAuthController {
     			return Result.error("该手机号已经已经存在，请使用其他手机号注册");
     		}else {
     			sysUser.setCreateTime(DateUtil.getNowTime());
-    			sysUserService.saveModelAndDept(sysUser);
+    			sysUserService.save(sysUser);
     		}
 	    }catch(Exception e) {
     		e.printStackTrace();
