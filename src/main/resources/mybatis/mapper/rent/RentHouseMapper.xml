@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elling.rent.dao.mapper.RentHouseMapper">
+  <resultMap id="BaseResultMap" type="com.elling.rent.model.RentHouse">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="HOUSE_CODE" jdbcType="VARCHAR" property="houseCode" />
+    <result column="HOUSE_NAME" jdbcType="VARCHAR" property="houseName" />
+    <result column="GROUP_CODE" jdbcType="VARCHAR" property="groupCode" />
+    <result column="HOUSE_ADDRESS" jdbcType="VARCHAR" property="houseAddress" />
+    <result column="HOUSE_AREA" jdbcType="VARCHAR" property="houseArea" />
+    <result column="HOUSE_PRICE" jdbcType="VARCHAR" property="housePrice" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="ORDER_NUM" jdbcType="BIGINT" property="orderNum" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <resultMap id="customerMap" type="java.util.HashMap">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="HOUSE_CODE" jdbcType="VARCHAR" property="houseCode" />
+    <result column="HOUSE_NAME" jdbcType="VARCHAR" property="houseName" />
+    <result column="GROUP_CODE" jdbcType="VARCHAR" property="groupCode" />
+    <result column="HOUSE_ADDRESS" jdbcType="VARCHAR" property="houseAddress" />
+    <result column="HOUSE_AREA" jdbcType="VARCHAR" property="houseArea" />
+    <result column="HOUSE_PRICE" jdbcType="VARCHAR" property="housePrice" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="ORDER_NUM" jdbcType="BIGINT" property="orderNum" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <!--根据自定义条件查询-->
+  <select id="getByCondition" resultMap="customerMap">
+	    SELECT
+			<include refid="BaseColumn"/>
+		FROM
+			RENT_HOUSE T
+		<where>
+			<if test="id!=null and id != ''">T.ID = #{id}</if>
+			<if test="houseCode!=null and houseCode != ''">T.HOUSE_CODE = #{houseCode}</if>
+			<if test="houseName!=null and houseName != ''">T.HOUSE_NAME = #{houseName}</if>
+			<if test="groupCode!=null and groupCode != ''">T.GROUP_CODE = #{groupCode}</if>
+			<if test="houseAddress!=null and houseAddress != ''">T.HOUSE_ADDRESS = #{houseAddress}</if>
+			<if test="houseArea!=null and houseArea != ''">T.HOUSE_AREA = #{houseArea}</if>
+			<if test="housePrice!=null and housePrice != ''">T.HOUSE_PRICE = #{housePrice}</if>
+			<if test="status!=null and status != ''">T.STATUS = #{status}</if>
+			<if test="orderNum!=null and orderNum != ''">T.ORDER_NUM = #{orderNum}</if>
+			<if test="remark!=null and remark != ''">T.REMARK = #{remark}</if>
+			<if test="createTime!=null and createTime != ''">T.CREATE_TIME = #{createTime}</if>
+			<if test="updateTime!=null and updateTime != ''">T.UPDATE_TIME = #{updateTime}</if>
+		</where>
+  </select>
+  <sql id="BaseColumn">
+  		HOUSE_CODE,HOUSE_NAME,GROUP_CODE,HOUSE_ADDRESS,HOUSE_AREA,HOUSE_PRICE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME
+  </sql>
+</mapper>
