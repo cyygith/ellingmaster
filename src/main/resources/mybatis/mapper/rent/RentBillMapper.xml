@@ -23,8 +23,12 @@
   </resultMap>
   <resultMap id="customerMap" type="java.util.HashMap">
     <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="ID" jdbcType="BIGINT" property="id" />
     <result column="CONTRACT_CODE" jdbcType="VARCHAR" property="contractCode" />
+    <result column="GROUP_CODE" jdbcType="VARCHAR" property="groupCode" />
+    <result column="GROUP_NAME" jdbcType="VARCHAR" property="groupName" />
     <result column="HOUSE_CODE" jdbcType="VARCHAR" property="houseCode" />
+    <result column="HOUSE_NAME" jdbcType="VARCHAR" property="houseName" />
     <result column="MONEY" jdbcType="VARCHAR" property="money" />
     <result column="START_TIME" jdbcType="VARCHAR" property="startTime" />
     <result column="END_TIME" jdbcType="VARCHAR" property="endTime" />
@@ -67,8 +71,29 @@
 			<if test="createTime!=null and createTime != ''">T.CREATE_TIME = #{createTime}</if>
 			<if test="updateTime!=null and updateTime != ''">T.UPDATE_TIME = #{updateTime}</if>
 		</where>
+		<choose>
+			<when test="orderBy!=null and orderBy != ''">
+				ORDER BY #{orderBy}
+			</when>
+			<otherwise>
+				ORDER BY T.ID
+			</otherwise>
+		</choose>
+  </select>
+  <select id="getListByGroup" resultMap="customerMap">
+	    SELECT
+			G.GROUP_NAME,
+			G.GROUP_CODE,
+			H.HOUSE_NAME,
+			H.HOUSE_CODE
+		FROM
+			rent_group G,
+			rent_house H
+		WHERE
+			G.GROUP_CODE = H.GROUP_CODE
+		ORDER BY G.GROUP_CODE,H.HOUSE_CODE
   </select>
   <sql id="BaseColumn">
-  		CONTRACT_CODE,HOUSE_CODE,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME
+  		ID,CONTRACT_CODE,HOUSE_CODE,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME
   </sql>
 </mapper>

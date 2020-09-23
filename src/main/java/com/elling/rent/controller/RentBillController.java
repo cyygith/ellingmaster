@@ -1,21 +1,23 @@
 package com.elling.rent.controller;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.elling.common.entity.Result;
+import com.elling.common.utils.StringUtil;
 import com.elling.rent.model.RentBill;
 import com.elling.rent.service.RentBillService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import org.apache.log4j.Logger;
-import java.util.List;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import com.elling.common.utils.StringUtil;
-import com.elling.common.entity.Result;
 
 import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example.Criteria;
@@ -73,6 +75,22 @@ public class RentBillController {
     public Result update(@RequestBody RentBill rentBill) {
     	try {
 		    rentBillService.update(rentBill);
+		}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error(e.getMessage());
+    	}
+	    return Result.success();
+    }
+    @RequestMapping("saveOrUpdate")
+    public Result saveOrUpdate(@RequestBody RentBill rentBill) {
+    	try {
+    		if(rentBill.getId()!=null) {
+    			rentBillService.update(rentBill);
+    		}else {
+    			rentBillService.save(rentBill);
+    		}
+		    
 		}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
@@ -166,5 +184,34 @@ public class RentBillController {
     		logger.error(e.getMessage());
     		return Result.error(e.getMessage());
     	}
+    }
+    
+    @RequestMapping("getListByGroup")
+    public Result getListByGroup(RentBill rentBill) {
+    	Map rMap = new HashMap();
+    	try {
+    		List<Map<String,Object>> list = rentBillService.getListByGroup(rentBill);
+    		if(list!=null && list.size()>0) {
+    			List tempList = new ArrayList();
+    			for(Map m:list) {
+    				String groupCode = StringUtil.getString(m.get("groupCode"));
+    				String groupName = StringUtil.getString(m.get("groupName"));
+    				String houseCode = StringUtil.getString(m.get("houseCode"));
+    				if(rMap.get(groupName)==null) {
+    					tempList = new ArrayList();
+    					tempList.add(m);
+    					rMap.put(groupName, tempList);
+    				}else {
+    					((List)rMap.get(groupName)).add(m);
+    				}
+    			}
+    		}
+
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error(e.getMessage());
+    	}
+        return Result.success(rMap);
     }
 }

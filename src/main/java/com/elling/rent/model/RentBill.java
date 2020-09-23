@@ -110,6 +110,9 @@ public class RentBill {
      */
     @Column(name = "UPDATE_TIME")
     private String updateTime;
+    
+    @Transient
+    private String orderBy;
 
     /**
      * @return ID
@@ -430,4 +433,15 @@ public class RentBill {
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
+
+	public String getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
+	}
+    
+    
+    
 }

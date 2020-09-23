@@ -28,6 +28,9 @@
 				/gGoodsNoAuth/** = anon
 				/sysNoAuth/** = anon
 				/accBook/** = anon
+				/rentBill/** = anon
+				/rentHouse/** = anon
+				/rentGroup/** = anon
 				/** = authc
 				<!-- /** = authc -->
 			</value>
