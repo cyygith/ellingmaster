@@ -113,6 +113,11 @@ public class RentBill {
     
     @Transient
     private String orderBy;
+    @Transient
+    private String houseName;
+    @Transient
+    private String groupName;
+    
 
     /**
      * @return ID
@@ -440,6 +445,22 @@ public class RentBill {
 
 	public void setOrderBy(String orderBy) {
 		this.orderBy = orderBy;
+	}
+
+	public String getHouseName() {
+		return houseName;
+	}
+
+	public void setHouseName(String houseName) {
+		this.houseName = houseName;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
     
     

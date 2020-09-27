@@ -47,11 +47,12 @@
   </resultMap>
   <!--根据自定义条件查询-->
   <select id="getByCondition" resultMap="customerMap">
-	    SELECT
-			<include refid="BaseColumn"/>
+	    SELECT H.HOUSE_NAME,G.GROUP_NAME,
+			<include refid="CustBaseColumn"/>
 		FROM
-			RENT_BILL T
+			RENT_BILL T,RENT_HOUSE H,RENT_GROUP G
 		<where>
+			T.HOUSE_CODE = H.HOUSE_CODE AND H.GROUP_CODE = G.GROUP_CODE
 			<if test="id!=null and id != ''">T.ID = #{id}</if>
 			<if test="contractCode!=null and contractCode != ''">T.CONTRACT_CODE = #{contractCode}</if>
 			<if test="houseCode!=null and houseCode != ''">T.HOUSE_CODE = #{houseCode}</if>
@@ -95,5 +96,8 @@
   </select>
   <sql id="BaseColumn">
   		ID,CONTRACT_CODE,HOUSE_CODE,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME
+  </sql>
+  <sql id="CustBaseColumn">
+  		T.ID,T.CONTRACT_CODE,T.HOUSE_CODE,T.MONEY,T.START_TIME,T.END_TIME,T.LAST_ELECTRIC,T.CURR_ELECTRIC,T.WATER_PAY_TYPE,T.RENT_NUM,T.LAST_WATER,T.CURR_WATER,T.PAY_TYPE,T.STATUS,T.ORDER_NUM,T.REMARK,T.CREATE_TIME,T.UPDATE_TIME
   </sql>
 </mapper>
