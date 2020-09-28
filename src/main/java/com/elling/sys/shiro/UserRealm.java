@@ -38,6 +38,9 @@ public class UserRealm extends AuthorizingRealm{
 	@Autowired
 	private SysRoleService sysRoleService;
 	
+	/**
+	 * .授权(验证权限时调用)
+	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection token) {
 		String username = ((SysUser)token.getPrimaryPrincipal()).getUsername(); 
@@ -53,28 +56,38 @@ public class UserRealm extends AuthorizingRealm{
         }
         
         Set<String> permissions = null;//userService.selectPermissionsByUsername(username);
+//        Set<String> permissions = sysUserService.selectPermissionsByUsername(username);
+        
         authorizationInfo.addRoles(roles);
         authorizationInfo.addStringPermissions(permissions);
         return authorizationInfo;  
 	}
-
+	
+	/**
+	 * .认证(登录时调用)
+	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken at) throws AuthenticationException {
 		UsernamePasswordToken token = (UsernamePasswordToken) at;  
         String username = (String)token.getUsername();
-        if(!StringUtils.isNullOrEmpty(username)){
-            //根据用户名，从数据库获取
-            SysUser user = sysUserService.findBy("username", username);
-            if(user == null){
-                throw new UnknownAccountException("账户不存在");
-            }
-            if(!Constants.STATE_OK.equals(StringUtil.getString(user.getStatus()))){
-                throw new LockedAccountException("账户被锁定");
-            }
-            //返回，并判断密码
-            return new SimpleAuthenticationInfo(user,user.getPassword(),getName());
+        
+        //验证输入名是否为空
+        if(!StringUtils.isNullOrEmpty(username)) {
+        	throw new UnknownAccountException("账号为空，请检查输入项。");
         }
-        return null;
+        
+        
+        //根据用户名，从数据库获取
+        SysUser user = sysUserService.findBy("username", username);
+        if(user == null){
+            throw new UnknownAccountException("账户不存在");
+        }
+        if(!Constants.STATE_OK.equals(StringUtil.getString(user.getStatus()))){
+            throw new LockedAccountException("账户被锁定");
+        }
+        //返回,并判断密码
+        return new SimpleAuthenticationInfo(user,user.getPassword(),getName());
+        
 	}
 	
 }
