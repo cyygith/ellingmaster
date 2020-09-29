@@ -129,11 +129,14 @@ public class RentBillController {
     }
 
     @RequestMapping("list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "3") Integer size) {
         PageInfo pageInfo = null;
         try {
-	        PageHelper.startPage(page, size);
-	        List<RentBill> list = rentBillService.findAll();
+        	RentBill rentBill = null;
+//        	PageHelper.startPage(page, size);
+//	        List<RentBill> list = rentBillService.findAll();
+        	PageHelper.startPage(page, size);
+	        List<Map<String,Object>> list = rentBillService.getByCondition(rentBill);
 	        pageInfo = new PageInfo(list);
 	    }catch(Exception e) {
     	   e.printStackTrace();

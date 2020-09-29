@@ -53,24 +53,24 @@
 			RENT_BILL T,RENT_HOUSE H,RENT_GROUP G
 		<where>
 			T.HOUSE_CODE = H.HOUSE_CODE AND H.GROUP_CODE = G.GROUP_CODE
-			<if test="id!=null and id != ''">T.ID = #{id}</if>
-			<if test="contractCode!=null and contractCode != ''">T.CONTRACT_CODE = #{contractCode}</if>
-			<if test="houseCode!=null and houseCode != ''">T.HOUSE_CODE = #{houseCode}</if>
-			<if test="money!=null and money != ''">T.MONEY = #{money}</if>
-			<if test="startTime!=null and startTime != ''">T.START_TIME = #{startTime}</if>
-			<if test="endTime!=null and endTime != ''">T.END_TIME = #{endTime}</if>
-			<if test="lastElectric!=null and lastElectric != ''">T.LAST_ELECTRIC = #{lastElectric}</if>
-			<if test="currElectric!=null and currElectric != ''">T.CURR_ELECTRIC = #{currElectric}</if>
-			<if test="waterPayType!=null and waterPayType != ''">T.WATER_PAY_TYPE = #{waterPayType}</if>
-			<if test="rentNum!=null and rentNum != ''">T.RENT_NUM = #{rentNum}</if>
-			<if test="lastWater!=null and lastWater != ''">T.LAST_WATER = #{lastWater}</if>
-			<if test="currWater!=null and currWater != ''">T.CURR_WATER = #{currWater}</if>
-			<if test="payType!=null and payType != ''">T.PAY_TYPE = #{payType}</if>
-			<if test="status!=null and status != ''">T.STATUS = #{status}</if>
-			<if test="orderNum!=null and orderNum != ''">T.ORDER_NUM = #{orderNum}</if>
-			<if test="remark!=null and remark != ''">T.REMARK = #{remark}</if>
-			<if test="createTime!=null and createTime != ''">T.CREATE_TIME = #{createTime}</if>
-			<if test="updateTime!=null and updateTime != ''">T.UPDATE_TIME = #{updateTime}</if>
+			<if test="id!=null and id != ''">AND T.ID = #{id}</if>
+			<if test="contractCode!=null and contractCode != ''">AND T.CONTRACT_CODE = #{contractCode}</if>
+			<if test="houseCode!=null and houseCode != ''">AND T.HOUSE_CODE = #{houseCode}</if>
+			<if test="money!=null and money != ''">AND T.MONEY = #{money}</if>
+			<if test="startTime!=null and startTime != ''">AND T.START_TIME = #{startTime}</if>
+			<if test="endTime!=null and endTime != ''">AND T.END_TIME = #{endTime}</if>
+			<if test="lastElectric!=null and lastElectric != ''">AND T.LAST_ELECTRIC = #{lastElectric}</if>
+			<if test="currElectric!=null and currElectric != ''">AND T.CURR_ELECTRIC = #{currElectric}</if>
+			<if test="waterPayType!=null and waterPayType != ''">AND T.WATER_PAY_TYPE = #{waterPayType}</if>
+			<if test="rentNum!=null and rentNum != ''">AND T.RENT_NUM = #{rentNum}</if>
+			<if test="lastWater!=null and lastWater != ''">AND T.LAST_WATER = #{lastWater}</if>
+			<if test="currWater!=null and currWater != ''">AND T.CURR_WATER = #{currWater}</if>
+			<if test="payType!=null and payType != ''">AND T.PAY_TYPE = #{payType}</if>
+			<if test="status!=null and status != ''">AND T.STATUS = #{status}</if>
+			<if test="orderNum!=null and orderNum != ''">AND T.ORDER_NUM = #{orderNum}</if>
+			<if test="remark!=null and remark != ''">AND T.REMARK = #{remark}</if>
+			<if test="createTime!=null and createTime != ''">AND T.CREATE_TIME = #{createTime}</if>
+			<if test="updateTime!=null and updateTime != ''">AND T.UPDATE_TIME = #{updateTime}</if>
 		</where>
 		<choose>
 			<when test="orderBy!=null and orderBy != ''">
@@ -79,7 +79,7 @@
 			<otherwise>
 				ORDER BY T.ID
 			</otherwise>
-		</choose>
+		</choose>	
   </select>
   <select id="getListByGroup" resultMap="customerMap">
 	    SELECT
