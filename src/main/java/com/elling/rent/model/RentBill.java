@@ -111,6 +111,12 @@ public class RentBill {
     @Column(name = "UPDATE_TIME")
     private String updateTime;
     
+    /**
+     * 总计
+     */
+    @Column(name = "SUM")
+    private String sum;
+    
     @Transient
     private String orderBy;
     @Transient
@@ -461,6 +467,14 @@ public class RentBill {
 
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+
+	public String getSum() {
+		return sum;
+	}
+
+	public void setSum(String sum) {
+		this.sum = sum;
 	}
     
     

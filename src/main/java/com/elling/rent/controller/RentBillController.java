@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.elling.common.entity.Result;
+import com.elling.common.utils.DateUtil;
 import com.elling.common.utils.StringUtil;
+import com.elling.rent.Constant;
 import com.elling.rent.model.RentBill;
 import com.elling.rent.service.RentBillService;
 import com.github.pagehelper.PageHelper;
@@ -41,7 +44,7 @@ public class RentBillController {
 	    }catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
-    		return Result.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
     	}
 	    return Result.success();
     }
@@ -53,7 +56,7 @@ public class RentBillController {
 		}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
-    		return Result.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
     	}
 	    return Result.success();
     }
@@ -66,7 +69,7 @@ public class RentBillController {
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
-    		return Result.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
     	}
 	    return Result.success();
     }
@@ -78,10 +81,69 @@ public class RentBillController {
 		}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
-    		return Result.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
     	}
 	    return Result.success();
     }
+    /**
+     * 收租，找到上个月的房租
+     * 1、属期开始时间为上个属期的结束时间
+     * 2、上月度数为上个月的本度数
+     * 
+     * @param rentBill
+     * @return
+     */
+    @RequestMapping("doRent")
+    public Result doRent(RentBill rentBill) {
+    	try {
+    		
+    		List<RentBill> rentBs = rentBillService.getByCondition(rentBill);
+    		if(null!=rentBs&&rentBs.size()>0) {
+    			RentBill tmpRb = rentBs.get(0);
+    			
+    			if(Constant.STATUS_USE.equals(tmpRb.getStatus())) {//如果有值,则证明上个月已经交了
+    				RentBill rb = new RentBill();
+            		BeanUtils.copyProperties(rb, tmpRb);
+            		rb.setId(null);
+            		rb.setStartTime(tmpRb.getEndTime());
+            		rb.setEndTime("");
+            		
+            		rb.setLastElectric(tmpRb.getCurrElectric());
+            		rb.setCurrElectric("");
+            		rb.setLastWater(tmpRb.getCurrWater());
+            		rb.setCurrWater("");
+            		rb.setStatus(Constant.STATUS_NEW);
+            		rb.setRemark("");
+            		
+            		rb.setCreateTime(DateUtil.getNowTime());
+            		
+            		rentBillService.save(rb);
+            		return Result.success(rb);
+    			}else {
+    				return Result.success(tmpRb);
+    			}
+    			
+    		}else {
+    			rentBillService.save(rentBill);
+    			RentBill rbNew = new RentBill();
+    			rbNew.setId(rentBill.getId());
+    			List<RentBill> rbs = rentBillService.getByCondition(rbNew);
+        		if(null!=rbs&&rbs.size()>0) rbNew = rbs.get(0);
+    			return Result.success(rbNew); 
+    		}
+    		
+		}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+	    
+    }
+    /**
+     * 根据开始时间和结束时间保存
+     * @param rentBill
+     * @return
+     */
     @RequestMapping("saveOrUpdate")
     public Result saveOrUpdate(@RequestBody RentBill rentBill) {
     	try {
@@ -94,7 +156,7 @@ public class RentBillController {
 		}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
-    		return Result.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
     	}
 	    return Result.success();
     }
@@ -107,23 +169,23 @@ public class RentBillController {
 	    }catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
-    		return Result.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
     	}
 	    return Result.success(rentBill);
     }
     
     @RequestMapping("getByCondition")
     public Result getByCondition(RentBill rentBill) {
-    	Map rMap = null;
+    	RentBill rMap = null;
     	try {
-    		List<Map<String,Object>> list = rentBillService.getByCondition(rentBill);
+    		List<RentBill> list = rentBillService.getByCondition(rentBill);
     		if(list!=null && list.size()>0) {
     			rMap = list.get(0);
     		}
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
-    		return Result.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
     	}
         return Result.success(rMap);
     }
@@ -136,12 +198,12 @@ public class RentBillController {
 //        	PageHelper.startPage(page, size);
 //	        List<RentBill> list = rentBillService.findAll();
         	PageHelper.startPage(page, size);
-	        List<Map<String,Object>> list = rentBillService.getByCondition(rentBill);
+	        List<RentBill> list = rentBillService.getByCondition(rentBill);
 	        pageInfo = new PageInfo(list);
 	    }catch(Exception e) {
     	   e.printStackTrace();
-	   	   logger.error(e.getMessage());
-	   	   return Result.error(e.getMessage());
+	   	   logger.error("查询错误："+e.getMessage());
+	   	   return Result.error("查询错误："+e.getMessage());
        	}
         return Result.success(pageInfo);
     }
@@ -154,7 +216,7 @@ public class RentBillController {
         }catch(Exception e){
         	e.printStackTrace();
         	logger.error(e.getMessage());
-        	return Result.error(e.getMessage());
+        	return Result.error("查询错误："+e.getMessage());
         }
     }
     
@@ -185,7 +247,7 @@ public class RentBillController {
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
-    		return Result.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
     	}
     }
     
@@ -213,7 +275,7 @@ public class RentBillController {
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
-    		return Result.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
     	}
         return Result.success(rMap);
     }

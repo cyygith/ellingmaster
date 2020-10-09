@@ -72,7 +72,7 @@ public class UserRealm extends AuthorizingRealm{
         String username = (String)token.getUsername();
         
         //验证输入名是否为空
-        if(!StringUtils.isNullOrEmpty(username)) {
+        if(StringUtils.isNullOrEmpty(username)) {
         	throw new UnknownAccountException("账号为空，请检查输入项。");
         }
         

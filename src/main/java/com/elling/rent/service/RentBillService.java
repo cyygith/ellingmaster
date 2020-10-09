@@ -16,7 +16,7 @@ public interface RentBillService extends Service<RentBill> {
 	 * @param map
 	 * @return
 	 */
-	public List<Map<String,Object>> getByCondition(RentBill rentBill);
+	public List<RentBill> getByCondition(RentBill rentBill);
 	/**
 	 *	根据自定义条件查询
 	 * @param map

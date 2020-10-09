@@ -21,7 +21,7 @@ public class RentBillServiceImpl extends AbstractService<RentBill> implements Re
     private RentBillMapper rentBillMapper;
     
 	@Override
-	public List<Map<String,Object>> getByCondition(RentBill rentBill) {
+	public List<RentBill> getByCondition(RentBill rentBill) {
 		return rentBillMapper.getByCondition(rentBill);
 	}
 	
