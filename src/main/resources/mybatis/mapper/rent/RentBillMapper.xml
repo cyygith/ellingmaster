@@ -92,7 +92,8 @@
 			G.GROUP_NAME,
 			G.GROUP_CODE,
 			H.HOUSE_NAME,
-			H.HOUSE_CODE
+			H.HOUSE_CODE,
+			H.ID
 		FROM
 			rent_group G,
 			rent_house H

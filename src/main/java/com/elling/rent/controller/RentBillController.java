@@ -196,14 +196,13 @@ public class RentBillController {
     }
 
     @RequestMapping("list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "3") Integer size) {
+    public Result list(RentBill rb,@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "3") Integer size) {
         PageInfo pageInfo = null;
         try {
-        	RentBill rentBill = null;
 //        	PageHelper.startPage(page, size);
 //	        List<RentBill> list = rentBillService.findAll();
         	PageHelper.startPage(page, size);
-	        List<RentBill> list = rentBillService.getByCondition(rentBill);
+	        List<RentBill> list = rentBillService.getByCondition(rb);
 	        pageInfo = new PageInfo(list);
 	    }catch(Exception e) {
     	   e.printStackTrace();
@@ -320,11 +319,15 @@ public class RentBillController {
     	try {
     		Map<String,Object> dataMap = new HashMap<String,Object>();
     		RentBill rb = rentBillService.findById(rentBill.getId());
-    		dataMap.put("rentBill", rb);
-    		OutputStream out = httpServletResponse.getOutputStream();
-    		Generator.pdfGenerateToResponse("rentReceipt.ftl", dataMap, null, PageSize.A4, "", true, null, out);
-    		out.close();
-    		System.out.println("生成pdf成功~~~");
+    		if(rb!=null) {
+    			dataMap.put("rentBill", rb);
+        		OutputStream out = httpServletResponse.getOutputStream();
+        		Generator.pdfGenerateToResponse("rentReceipt.ftl", dataMap, null, PageSize.A4, "", true, null, out);
+        		out.close();
+        		System.out.println("生成pdf成功~~~");
+    		}else {
+    			Result.error("没有可生成的数据");
+    		}
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
