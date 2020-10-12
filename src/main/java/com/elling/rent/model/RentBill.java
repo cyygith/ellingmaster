@@ -117,14 +117,35 @@ public class RentBill {
     @Column(name = "SUM")
     private String sum;
     
+    /**
+     * 冗余数据 排序字段
+     */
     @Transient
     private String orderBy;
+    /**
+     * 冗余数据 
+     */
     @Transient
     private String houseName;
+    /**
+     * 冗余数据 
+     */
+    @Transient
+    private String groupCode;
     @Transient
     private String groupName;
     
-
+    /**
+     * 冗余数据  剩余天数
+     */
+    @Transient
+    private String leftDays;
+    
+    /**
+     * 冗余数据  收租次数
+     */
+    @Transient
+    private String allCount;
     /**
      * @return ID
      */
@@ -475,6 +496,30 @@ public class RentBill {
 
 	public void setSum(String sum) {
 		this.sum = sum;
+	}
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
+	}
+
+	public String getLeftDays() {
+		return leftDays;
+	}
+
+	public void setLeftDays(String leftDays) {
+		this.leftDays = leftDays;
+	}
+
+	public String getAllCount() {
+		return allCount;
+	}
+
+	public void setAllCount(String allCount) {
+		this.allCount = allCount;
 	}
     
     

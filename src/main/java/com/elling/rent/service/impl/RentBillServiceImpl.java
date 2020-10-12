@@ -30,4 +30,8 @@ public class RentBillServiceImpl extends AbstractService<RentBill> implements Re
 		return rentBillMapper.getListByGroup(rentBill);
 	}
 	
+	@Override
+	public List<RentBill> monitorRentEndTime(RentBill rentBill) {
+		return rentBillMapper.monitorRentEndTime(rentBill);
+	}
 }

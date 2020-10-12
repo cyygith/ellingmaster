@@ -23,4 +23,11 @@ public interface RentBillService extends Service<RentBill> {
 	 * @return
 	 */
 	public List<Map<String,Object>> getListByGroup(RentBill rentBill);
+	
+	/**
+	 *	根据自定义条件查询  监控查询
+	 * @param map
+	 * @return
+	 */
+	public List<RentBill> monitorRentEndTime(RentBill rentBill);
 }

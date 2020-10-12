@@ -1,9 +1,12 @@
 package com.elling.rent.controller;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
@@ -16,11 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.elling.common.entity.Result;
 import com.elling.common.utils.DateUtil;
 import com.elling.common.utils.StringUtil;
+import com.elling.common.utils.pdf.Generator;
 import com.elling.rent.Constant;
 import com.elling.rent.model.RentBill;
 import com.elling.rent.service.RentBillService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.itextpdf.text.PageSize;
 
 import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example.Criteria;
@@ -276,6 +281,54 @@ public class RentBillController {
     		e.printStackTrace();
     		logger.error(e.getMessage());
     		return Result.error("查询错误："+e.getMessage());
+    	}
+        return Result.success(rMap);
+    }
+    
+    @RequestMapping("monitorRentEndTime")
+    public Result monitorRentEndTime(RentBill rentBill) {
+    	Map rMap = new HashMap();
+    	try {
+    		List<RentBill> list = rentBillService.monitorRentEndTime(rentBill);
+    		if(list!=null && list.size()>0) {
+    			List tempList = new ArrayList();
+    			for(RentBill rb:list) {
+    				String groupCode = StringUtil.getString(rb.getGroupCode());
+    				String groupName = StringUtil.getString(rb.getGroupName());
+    				String houseCode = StringUtil.getString(rb.getHouseCode());
+    				if(rMap.get(groupName)==null) {
+    					tempList = new ArrayList();
+    					tempList.add(rb);
+    					rMap.put(groupName, tempList);
+    				}else {
+    					((List)rMap.get(groupName)).add(rb);
+    				}
+    			}
+    		}
+
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+        return Result.success(rMap);
+    }
+    
+    @RequestMapping("getPdf")
+    public Result getPdf(RentBill rentBill,HttpServletResponse httpServletResponse) {
+    	Map rMap = new HashMap();
+    	try {
+    		Map<String,Object> dataMap = new HashMap<String,Object>();
+    		RentBill rb = rentBillService.findById(rentBill.getId());
+    		dataMap.put("rentBill", rb);
+    		OutputStream out = httpServletResponse.getOutputStream();
+    		Generator.pdfGenerateToResponse("rentReceipt.ftl", dataMap, null, PageSize.A4, "", true, null, out);
+    		out.close();
+    		System.out.println("生成pdf成功~~~");
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("生成错误："+e.getMessage());
     	}
         return Result.success(rMap);
     }

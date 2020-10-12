@@ -23,4 +23,10 @@ public interface RentBillMapper extends MyMapper<RentBill> {
 	 * @return
 	 */
 	public List<Map<String,Object>> getListByGroup(RentBill rentBill);
+	/**
+	 *	 监控查询
+	 * @param map
+	 * @return
+	 */
+	public List<RentBill> monitorRentEndTime(RentBill rentBill);
 }

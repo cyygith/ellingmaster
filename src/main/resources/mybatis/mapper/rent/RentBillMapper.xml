@@ -20,6 +20,10 @@
     <result column="REMARK" jdbcType="VARCHAR" property="remark" />
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+    <result column="HOUSE_NAME" jdbcType="VARCHAR" property="houseName" />
+    <result column="GROUP_NAME" jdbcType="VARCHAR" property="groupName" />
+    <result column="ALL_COUNT" jdbcType="VARCHAR" property="allCount" />
+    <result column="LEFT_DAYS" jdbcType="VARCHAR" property="leftDays" />
   </resultMap>
   <resultMap id="customerMap" type="java.util.HashMap">
     <id column="ID" jdbcType="BIGINT" property="id" />
@@ -44,6 +48,8 @@
     <result column="REMARK" jdbcType="VARCHAR" property="remark" />
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+    <result column="ALL_COUNT" jdbcType="VARCHAR" property="allCount" />
+    <result column="LEFT_DAYS" jdbcType="VARCHAR" property="leftDays" />
   </resultMap>
   <!--根据自定义条件查询-->
   <select id="getByCondition" resultMap="BaseResultMap">
@@ -94,6 +100,34 @@
 			G.GROUP_CODE = H.GROUP_CODE
 		ORDER BY G.GROUP_CODE,H.HOUSE_CODE
   </select>
+  <select id="monitorRentEndTime" resultMap="BaseResultMap">
+	    SELECT
+			H.HOUSE_CODE,
+			H.HOUSE_NAME,
+			G.GROUP_CODE,
+			G.GROUP_NAME,
+			A.END_TIME AS END_TIME,
+			A.allCount AS ALL_COUNT,
+			DATEDIFF(A.END_TIME, NOW()) AS LEFT_DAYS
+		FROM
+			rent_house H,
+			rent_group G,
+			(
+				SELECT
+					t.HOUSE_CODE AS HOUSE_CODE,
+					MAX(t.END_TIME) AS END_TIME,
+					count(1) AS allCount
+				FROM
+					rent_bill t
+				GROUP BY
+					t.HOUSE_CODE
+			) A
+		WHERE
+			H.HOUSE_CODE = A.HOUSE_CODE
+		AND H.GROUP_CODE = G.GROUP_CODE
+  </select>
+  
+  
   <sql id="BaseColumn">
   		ID,CONTRACT_CODE,HOUSE_CODE,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME
   </sql>
