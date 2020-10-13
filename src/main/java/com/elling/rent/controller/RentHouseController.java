@@ -1,4 +1,5 @@
 package com.elling.rent.controller;
+import com.elling.rent.model.RentBill;
 import com.elling.rent.model.RentHouse;
 import com.elling.rent.service.RentHouseService;
 import com.github.pagehelper.PageHelper;
@@ -80,7 +81,27 @@ public class RentHouseController {
     	}
 	    return Result.success();
     }
-
+    /**
+     * 新增或者更新
+     * @param rentBill
+     * @return
+     */
+    @RequestMapping("saveOrUpdate")
+    public Result saveOrUpdate(@RequestBody RentHouse rentHouse) {
+    	try {
+    		if(rentHouse.getId()!=null) {
+    			rentHouseService.update(rentHouse);
+    		}else {
+    			rentHouseService.save(rentHouse);
+    		}
+		    
+		}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+	    return Result.success();
+    }
     @RequestMapping("detail")
     public Result detail(@RequestParam Long id) {
     	RentHouse rentHouse = null;
@@ -96,26 +117,30 @@ public class RentHouseController {
     
     @RequestMapping("getByCondition")
     public Result getByCondition(RentHouse rentHouse) {
-    	Map rMap = null;
+    	RentHouse rh = null;
     	try {
-    		List<Map<String,Object>> list = rentHouseService.getByCondition(rentHouse);
+    		List<RentHouse> list = rentHouseService.getByCondition(rentHouse);
     		if(list!=null && list.size()>0) {
-    			rMap = list.get(0);
+    			rh = list.get(0);
     		}
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
     		return Result.error(e.getMessage());
     	}
-        return Result.success(rMap);
+        return Result.success(rh);
     }
 
     @RequestMapping("list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+    public Result list(RentHouse rentHouse,@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageInfo pageInfo = null;
         try {
+//	        PageHelper.startPage(page, size);
+//	        List<RentHouse> list = rentHouseService.findAll();
+//	        pageInfo = new PageInfo(list);
+	        
 	        PageHelper.startPage(page, size);
-	        List<RentHouse> list = rentHouseService.findAll();
+	        List<RentHouse> list = rentHouseService.getByCondition(rentHouse);
 	        pageInfo = new PageInfo(list);
 	    }catch(Exception e) {
     	   e.printStackTrace();

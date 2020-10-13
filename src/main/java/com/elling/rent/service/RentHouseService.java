@@ -16,5 +16,5 @@ public interface RentHouseService extends Service<RentHouse> {
 	 * @param map
 	 * @return
 	 */
-	public List<Map<String,Object>> getByCondition(RentHouse rentHouse);
+	public List<RentHouse> getByCondition(RentHouse rentHouse);
 }

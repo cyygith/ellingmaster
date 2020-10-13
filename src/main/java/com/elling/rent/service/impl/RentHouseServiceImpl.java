@@ -21,7 +21,7 @@ public class RentHouseServiceImpl extends AbstractService<RentHouse> implements 
     private RentHouseMapper rentHouseMapper;
     
 	@Override
-	public List<Map<String,Object>> getByCondition(RentHouse rentHouse) {
+	public List<RentHouse> getByCondition(RentHouse rentHouse) {
 		return rentHouseMapper.getByCondition(rentHouse);
 	}
 }
