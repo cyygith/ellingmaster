@@ -318,11 +318,41 @@ public class RentBillController {
     	Map rMap = new HashMap();
     	try {
     		Map<String,Object> dataMap = new HashMap<String,Object>();
-    		RentBill rb = rentBillService.findById(rentBill.getId());
-    		if(rb!=null) {
+    		rentBill.setId(62L);
+    		List<RentBill> rbs = rentBillService.getByCondition(rentBill);
+    		if(rbs!=null&&rbs.size()>0) {
+    			RentBill rb = rbs.get(0);
+    			//电费
+    			String currElect = rb.getCurrElectric();
+    			String lastElect = rb.getLastElectric();
+    			float eleFee = 0;
+    			if(!StringUtil.isNotEmpty(currElect)&&!StringUtil.isNotEmpty(lastElect)) {
+    				eleFee = Float.parseFloat(currElect)-Float.parseFloat(lastElect);
+    			}
+    			//水费
+    			String currWater = rb.getCurrWater();
+    			String lastWater = rb.getLastWater();
+    			String waterPayType = rb.getWaterPayType();//水费付款方式
+    			String waterPayTypeName = "";//水费付款方式
+    			Long rentNum = rb.getRentNum();//租住人数
+    			float waterFee = 0;
+    			if("1".equals(waterPayType)) {//按吨支付
+    				waterPayTypeName = "5元/吨";
+    				if(!StringUtil.isNotEmpty(currWater)&&!StringUtil.isNotEmpty(lastWater)) {
+        				waterFee = Float.parseFloat(currWater)-Float.parseFloat(lastWater);
+        			}
+    			}else {
+    				waterPayTypeName = "10元/人";
+    				waterFee = rentNum * 5L;
+    			}
+    			
+    			
+    			dataMap.put("waterPayTypeName", waterPayTypeName);
+    			dataMap.put("waterFee", (waterFee==0?"":waterFee));
+    			dataMap.put("eleFee", (eleFee==0?"":eleFee));
     			dataMap.put("rentBill", rb);
         		OutputStream out = httpServletResponse.getOutputStream();
-        		Generator.pdfGenerateToResponse("rentReceipt.ftl", dataMap, null, PageSize.A4, "", true, null, out);
+				Generator.pdfGenerateToResponse("rentReceipt.ftl", dataMap, null, PageSize.A4, "", true, null, out);
         		out.close();
         		System.out.println("生成pdf成功~~~");
     		}else {
