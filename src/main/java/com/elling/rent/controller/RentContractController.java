@@ -1,5 +1,6 @@
 package com.elling.rent.controller;
 import com.elling.rent.model.RentContract;
+import com.elling.rent.model.RentPerson;
 import com.elling.rent.service.RentContractService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -80,7 +81,27 @@ public class RentContractController {
     	}
 	    return Result.success();
     }
-
+    /**
+     * 新增或者更新
+     * @param
+     * @return
+     */
+    @RequestMapping("saveOrUpdate")
+    public Result saveOrUpdate(@RequestBody RentContract rentContract) {
+    	try {
+    		if(rentContract.getId()!=null) {
+    			rentContractService.update(rentContract);
+    		}else {
+    			rentContractService.save(rentContract);
+    		}
+		    
+		}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+	    return Result.success();
+    }
     @RequestMapping("detail")
     public Result detail(@RequestParam Long id) {
     	RentContract rentContract = null;

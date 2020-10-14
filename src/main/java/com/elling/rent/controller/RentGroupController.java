@@ -1,5 +1,6 @@
 package com.elling.rent.controller;
 import com.elling.rent.model.RentGroup;
+import com.elling.rent.model.RentHouse;
 import com.elling.rent.service.RentGroupService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -80,7 +81,27 @@ public class RentGroupController {
     	}
 	    return Result.success();
     }
-
+    /**
+     * 新增或者更新
+     * @param
+     * @return
+     */
+    @RequestMapping("saveOrUpdate")
+    public Result saveOrUpdate(@RequestBody RentGroup rentGroup) {
+    	try {
+    		if(rentGroup.getId()!=null) {
+    			rentGroupService.update(rentGroup);
+    		}else {
+    			rentGroupService.save(rentGroup);
+    		}
+		    
+		}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+	    return Result.success();
+    }
     @RequestMapping("detail")
     public Result detail(@RequestParam Long id) {
     	RentGroup rentGroup = null;

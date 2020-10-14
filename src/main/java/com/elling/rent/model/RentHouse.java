@@ -78,7 +78,7 @@ public class RentHouse {
     /**
      * 实体ID
      */
-    @Column(name = "TENAMT_ID")
+    @Column(name = "TENANT_ID")
     private String tenantId;
 
     /**

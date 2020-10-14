@@ -1,4 +1,5 @@
 package com.elling.rent.controller;
+import com.elling.rent.model.RentGroup;
 import com.elling.rent.model.RentPerson;
 import com.elling.rent.service.RentPersonService;
 import com.github.pagehelper.PageHelper;
@@ -80,7 +81,27 @@ public class RentPersonController {
     	}
 	    return Result.success();
     }
-
+    /**
+     * 新增或者更新
+     * @param
+     * @return
+     */
+    @RequestMapping("saveOrUpdate")
+    public Result saveOrUpdate(@RequestBody RentPerson rentPerson) {
+    	try {
+    		if(rentPerson.getId()!=null) {
+    			rentPersonService.update(rentPerson);
+    		}else {
+    			rentPersonService.save(rentPerson);
+    		}
+		    
+		}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+	    return Result.success();
+    }
     @RequestMapping("detail")
     public Result detail(@RequestParam Long id) {
     	RentPerson rentPerson = null;
