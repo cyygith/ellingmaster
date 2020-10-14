@@ -116,6 +116,11 @@ public class RentBill {
      */
     @Column(name = "SUM")
     private String sum;
+    /**
+     * 实体ID
+     */
+    @Column(name = "TENAMT_ID")
+    private String tenantId;
     
     /**
      * 冗余数据 排序字段
@@ -520,6 +525,14 @@ public class RentBill {
 
 	public void setAllCount(String allCount) {
 		this.allCount = allCount;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
     
     

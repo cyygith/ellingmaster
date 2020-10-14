@@ -20,6 +20,7 @@
     <result column="REMARK" jdbcType="VARCHAR" property="remark" />
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+    <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
     <result column="HOUSE_NAME" jdbcType="VARCHAR" property="houseName" />
     <result column="GROUP_NAME" jdbcType="VARCHAR" property="groupName" />
     <result column="ALL_COUNT" jdbcType="VARCHAR" property="allCount" />
@@ -48,6 +49,7 @@
     <result column="REMARK" jdbcType="VARCHAR" property="remark" />
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+    <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
     <result column="ALL_COUNT" jdbcType="VARCHAR" property="allCount" />
     <result column="LEFT_DAYS" jdbcType="VARCHAR" property="leftDays" />
   </resultMap>
@@ -130,9 +132,9 @@
   
   
   <sql id="BaseColumn">
-  		ID,CONTRACT_CODE,HOUSE_CODE,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME
+  		ID,CONTRACT_CODE,HOUSE_CODE,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID
   </sql>
   <sql id="CustBaseColumn">
-  		T.ID,T.CONTRACT_CODE,T.HOUSE_CODE,T.MONEY,T.START_TIME,T.END_TIME,T.LAST_ELECTRIC,T.CURR_ELECTRIC,T.WATER_PAY_TYPE,T.RENT_NUM,T.LAST_WATER,T.CURR_WATER,T.PAY_TYPE,T.STATUS,T.ORDER_NUM,T.REMARK,T.SUM,T.CREATE_TIME,T.UPDATE_TIME
+  		T.ID,T.CONTRACT_CODE,T.HOUSE_CODE,T.MONEY,T.START_TIME,T.END_TIME,T.LAST_ELECTRIC,T.CURR_ELECTRIC,T.WATER_PAY_TYPE,T.RENT_NUM,T.LAST_WATER,T.CURR_WATER,T.PAY_TYPE,T.STATUS,T.ORDER_NUM,T.REMARK,T.SUM,T.CREATE_TIME,T.UPDATE_TIME,TENANT_ID
   </sql>
 </mapper>

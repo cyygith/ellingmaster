@@ -74,6 +74,12 @@ public class RentHouse {
      */
     @Column(name = "UPDATE_TIME")
     private String updateTime;
+    
+    /**
+     * 实体ID
+     */
+    @Column(name = "TENAMT_ID")
+    private String tenantId;
 
     /**
      * @return ID
@@ -286,4 +292,12 @@ public class RentHouse {
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
+    
+    public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 }

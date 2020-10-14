@@ -11,6 +11,7 @@
     <result column="REMARK" jdbcType="VARCHAR" property="remark" />
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+    <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
   </resultMap>
   <resultMap id="customerMap" type="java.util.HashMap">
     <id column="ID" jdbcType="BIGINT" property="id" />
@@ -22,6 +23,7 @@
     <result column="REMARK" jdbcType="VARCHAR" property="remark" />
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+    <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
   </resultMap>
   <!--根据自定义条件查询-->
   <select id="getByCondition" resultMap="customerMap">
@@ -42,6 +44,6 @@
 		</where>
   </select>
   <sql id="BaseColumn">
-  		GROUP_CODE,GROUP_NAME,GROUP_ADDRESS,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME
+  		GROUP_CODE,GROUP_NAME,GROUP_ADDRESS,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID
   </sql>
 </mapper>
