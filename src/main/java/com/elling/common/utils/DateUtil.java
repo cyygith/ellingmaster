@@ -9,6 +9,7 @@ public class DateUtil {
 	private static String formatDate = "YYYY-MM-dd";
 	private static String formatYearAndMonth = "YYYY-MM";
 	private static String formatDate1 = "YYYYMMdd";
+	private static String formatDateTime = "YYYYMMddHHmmss";
 	
 	
 	public static String getNowTime() {
@@ -25,7 +26,10 @@ public class DateUtil {
 		String date = new SimpleDateFormat(formatDate1).format(new Date());
 		return date;
 	}
-	
+	public static String getDateTime() {
+		String date = new SimpleDateFormat(formatDateTime).format(new Date());
+		return date;
+	}
 	public static String getNowYearAndMonth() {
 		String date = new SimpleDateFormat(formatYearAndMonth).format(new Date());
 		return date;
@@ -34,6 +38,8 @@ public class DateUtil {
 		System.out.println(DateUtil.getNowDate());
 		System.out.println(DateUtil.getNowTime());
 		System.out.println(DateUtil.getNowYearAndMonth());
+		System.out.println(DateUtil.getNowDate1());
+		System.out.println(DateUtil.getDateTime());
 	}
 	
 	

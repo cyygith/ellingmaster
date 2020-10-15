@@ -318,15 +318,24 @@ public class RentBillController {
     	Map rMap = new HashMap();
     	try {
     		Map<String,Object> dataMap = new HashMap<String,Object>();
-    		rentBill.setId(62L);
+    		rentBill.setId(rentBill.getId());
     		List<RentBill> rbs = rentBillService.getByCondition(rentBill);
     		if(rbs!=null&&rbs.size()>0) {
     			RentBill rb = rbs.get(0);
+    			
+    			//收据编号
+    			String CodeNum = DateUtil.getDateTime();
+    			//开票时间
+    			String startTime = rb.getEndTime();
+    			if(StringUtil.isNotEmpty(startTime)) {
+    				startTime = startTime.substring(0, 4)+"年"+startTime.substring(5,7)+"月"+startTime.substring(8,10)+"日";
+    			}
+    			
     			//电费
     			String currElect = rb.getCurrElectric();
     			String lastElect = rb.getLastElectric();
     			float eleFee = 0;
-    			if(!StringUtil.isNotEmpty(currElect)&&!StringUtil.isNotEmpty(lastElect)) {
+    			if(StringUtil.isNotEmpty(currElect)&&StringUtil.isNotEmpty(lastElect)) {
     				eleFee = Float.parseFloat(currElect)-Float.parseFloat(lastElect);
     			}
     			//水费
@@ -338,19 +347,20 @@ public class RentBillController {
     			float waterFee = 0;
     			if("1".equals(waterPayType)) {//按吨支付
     				waterPayTypeName = "5元/吨";
-    				if(!StringUtil.isNotEmpty(currWater)&&!StringUtil.isNotEmpty(lastWater)) {
+    				if(StringUtil.isNotEmpty(currWater)&&StringUtil.isNotEmpty(lastWater)) {
         				waterFee = Float.parseFloat(currWater)-Float.parseFloat(lastWater);
         			}
     			}else {
     				waterPayTypeName = "10元/人";
-    				waterFee = rentNum * 5L;
+    				waterFee = rentNum * 10L;
     			}
     			
-    			
+    			dataMap.put("CodeNum", CodeNum);
     			dataMap.put("waterPayTypeName", waterPayTypeName);
     			dataMap.put("waterFee", (waterFee==0?"":waterFee));
     			dataMap.put("eleFee", (eleFee==0?"":eleFee));
     			dataMap.put("rentBill", rb);
+    			dataMap.put("startTime", startTime);
         		OutputStream out = httpServletResponse.getOutputStream();
 				Generator.pdfGenerateToResponse("rentReceipt.ftl", dataMap, null, PageSize.A4, "", true, null, out);
         		out.close();

@@ -31,6 +31,8 @@
 				/rentBill/** = anon
 				/rentHouse/** = anon
 				/rentGroup/** = anon
+				/rentPerson/** = anon
+				/rentContract/** = anon
 				/** = authc
 				<!-- /** = authc -->
 			</value>

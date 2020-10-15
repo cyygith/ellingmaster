@@ -26,6 +26,7 @@ td{
 }
 .cc-no{
     color: red;
+    font-size: 12px;
 }
 .c-info{
     display: flex;
@@ -49,12 +50,16 @@ td{
 	<div class="rentReceipt-panel" id="receiptPanel">
 		<div class="content-panel recepitPanel">
 	            <div class="c-title">
-	                <div class="cc-title">出租屋专用收据</div>
-	                <div class="cc-no">No.</div>
+	                <div class="cc-title">出租屋专用收说</div>
+	                <div class="cc-no">No.${CodeNum!}</div>
 	            </div>
 	            <div class="c-info">
-	                <div class="cc-room">租客及房号：${rentBill.groupName!}${rentBill.houseName!}</div>
-	                <div class="cc-time">2020年9月23号</div>
+	                <table style="margin-bottom:10px;">
+	            		<tr>
+	            			<td width="60%" style="text-align:left;">租客及房号：${rentBill.groupName!}${rentBill.houseName!}:</td>
+	            			<td width="40%">${startTime}</td>
+	            		</tr>
+	            	</table>
 	            </div>
 	            <div>
 	                <table border="1" style="font-weight:normal;width:100%;overflow:auto;margin:auto;">
@@ -68,19 +73,19 @@ td{
 	                        <td rowspan="7"  width="20%">备注</td>
 	                    </tr>
 	                    <tr>
-	                        <td>万</td>
-	                        <td>仟</td>
-	                        <td>佰</td>
-	                        <td>十</td>
-	                        <td>元</td>
-	                        <td>角</td>
+	                        <td>1万</td>
+	                        <td>1仟</td>
+	                        <td> 佰</td>
+	                        <td>h十</td>
+	                        <td>个元</td>
+	                        <td> 角</td>
 	                    </tr>
 	                    <tr>
-	                        <td>电费(度)</td>
+	                        <td>电费( 度 )</td>
 	                        <td>${rentBill.lastElectric!}</td>
 	                        <td>${rentBill.currElectric!}</td>
-	                        <td>${eleFee}</td>
-	                        <td>1元/度</td>
+	                        <td>${eleFee!}</td>
+	                        <td>1 元/度 </td>
 	                        <td></td>
 	                        <td></td>
 	                        <td></td>
@@ -92,7 +97,7 @@ td{
 	                        <td>水费(吨)</td>
 	                        <td>${rentBill.lastWater!}</td>
 	                        <td>${rentBill.currWater!}</td>
-	                        <td>${waterFee}</td>
+	                        <td>${waterFee}（${rentBill.rentNum!}人）</td>
 	                        <td>${waterPayTypeName}</td>
 	                        <td></td>
 	                        <td></td>
@@ -138,16 +143,16 @@ td{
 	                    </tr>
 	                    <tr>
 	                        <td colspan="12" style="text-align: left;">
-	                           	 合计金额(大写)    ￥${rentBill.sum!}
+	                           	 合计金额(大写)    ￥ ${rentBill.sum!}
 	                        </td>
 	                    </tr>
 	                </table>
 	            </div>
 	            <div class="c-foot">
-	            	<table>
+	            	<table style="margin-top:10px;">
 	            		<tr>
-	            			<td width="60%">开票人：</td>
-	            			<td width="40%">客户签字：</td>
+	            			<td width="60%" style="text-align:left;">开票人:</td>
+	            			<td width="40%">客户签字:</td>
 	            		</tr>
 	            	</table>
 	            </div>
