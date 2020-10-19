@@ -1,9 +1,12 @@
 package com.elling.rent.controller;
+import com.elling.rent.model.RentBill;
 import com.elling.rent.model.RentContract;
 import com.elling.rent.model.RentPerson;
 import com.elling.rent.service.RentContractService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.itextpdf.text.PageSize;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +15,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.apache.log4j.Logger;
 import java.util.List;
+import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import com.elling.common.utils.DateUtil;
+import com.elling.common.utils.MoneyUtil;
 import com.elling.common.utils.StringUtil;
+import com.elling.common.utils.pdf.Generator;
 import com.elling.common.entity.Result;
 
 import tk.mybatis.mapper.entity.Condition;
@@ -117,18 +128,18 @@ public class RentContractController {
     
     @RequestMapping("getByCondition")
     public Result getByCondition(RentContract rentContract) {
-    	Map rMap = null;
+    	RentContract rc = new RentContract();
     	try {
-    		List<Map<String,Object>> list = rentContractService.getByCondition(rentContract);
+    		List<RentContract> list = rentContractService.getByCondition(rentContract);
     		if(list!=null && list.size()>0) {
-    			rMap = list.get(0);
+    			rc = list.get(0);
     		}
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
     		return Result.error(e.getMessage());
     	}
-        return Result.success(rMap);
+        return Result.success(rc);
     }
 
     @RequestMapping("list")
@@ -187,5 +198,40 @@ public class RentContractController {
     		logger.error(e.getMessage());
     		return Result.error(e.getMessage());
     	}
+    }
+    
+    @RequestMapping("getDepositPdf")
+    public Result getDepositPdf(RentContract rentContract,HttpServletResponse httpServletResponse) {
+    	Map rMap = new HashMap();
+    	try {
+    		Map<String,Object> dataMap = new HashMap<String,Object>();
+    		rentContract.setId(rentContract.getId());
+    		List<RentContract> rcs = rentContractService.getByCondition(rentContract);
+    		if(rcs!=null&&rcs.size()>0) {
+    			RentContract rc = rcs.get(0);
+    			
+    			//收据编号
+    			String CodeNum = DateUtil.getDateTime();
+    			//开票时间
+    			String startTime = rc.getEndTime();
+    			if(StringUtil.isNotEmpty(startTime)) {
+    				startTime = startTime.substring(0, 4)+"年"+startTime.substring(5,7)+"月"+startTime.substring(8,10)+"日";
+    			}
+    			
+    			dataMap.put("rentContract", rc);
+    			
+        		OutputStream out = httpServletResponse.getOutputStream();
+				Generator.pdfGenerateToResponse("rentDeposit.ftl", dataMap, null, PageSize.A4, "", true, null, out);
+        		out.close();
+        		System.out.println("生成pdf成功~~~");
+    		}else {
+    			Result.error("没有可生成的数据");
+    		}
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("生成错误："+e.getMessage());
+    	}
+        return Result.success(rMap);
     }
 }

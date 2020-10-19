@@ -15,7 +15,7 @@ table{
 	    border-collapse:collapse;
 }
 td{
-    
+    padding:7px 0 7px 0;
 }
 .c-title{
     text-align: center;
@@ -26,7 +26,7 @@ td{
 }
 .cc-no{
     color: red;
-    font-size: 12px;
+    font-size: 16px;
 }
 .c-info{
     display: flex;
@@ -50,35 +50,35 @@ td{
 	<div class="rentReceipt-panel" id="receiptPanel">
 		<div class="content-panel recepitPanel">
 	            <div class="c-title">
-	                <div class="cc-title">出租屋专用收说</div>
+	                <div class="cc-title">出租屋专用收据</div>
 	                <div class="cc-no">No.${CodeNum!}</div>
 	            </div>
 	            <div class="c-info">
-	                <table style="margin-bottom:10px;">
+	                <table style="margin-bottom:4px;">
 	            		<tr>
-	            			<td width="60%" style="text-align:left;">租客及房号：${rentBill.groupName!}${rentBill.houseName!}:</td>
-	            			<td width="40%">${startTime}</td>
+	            			<td width="65%" style="text-align:left;">租客及房号：${rentBill.groupName!}${rentBill.houseName!}</td>
+	            			<td width="35%" style="text-align:right;padding-right:5px;">${startTime}</td>
 	            		</tr>
 	            	</table>
 	            </div>
 	            <div>
 	                <table border="1" style="font-weight:normal;width:100%;overflow:auto;margin:auto;">
 	                    <tr>
-	                        <td rowspan="2" width="10%">项目</td>
+	                        <td rowspan="2" width="15%">项目</td>
 	                        <td rowspan="2" width="12%">上月</td>
 	                        <td rowspan="2" width="12%">本月</td>
 	                        <td rowspan="2" width="13%">实用</td>
 	                        <td rowspan="2" width="13%">单价</td>
 	                        <td colspan="6" width="20%">金额</td>
-	                        <td rowspan="7"  width="20%">备注</td>
+	                        <td rowspan="7"  width="15%">备注</td>
 	                    </tr>
 	                    <tr>
-	                        <td>1万</td>
-	                        <td>1仟</td>
-	                        <td> 佰</td>
-	                        <td>h十</td>
-	                        <td>个元</td>
-	                        <td> 角</td>
+	                        <td>万</td>
+	                        <td>仟</td>
+	                        <td>佰</td>
+	                        <td>十</td>
+	                        <td>元</td>
+	                        <td>角</td>
 	                    </tr>
 	                    <tr>
 	                        <td>电费( 度 )</td>
@@ -97,7 +97,7 @@ td{
 	                        <td>水费(吨)</td>
 	                        <td>${rentBill.lastWater!}</td>
 	                        <td>${rentBill.currWater!}</td>
-	                        <td>${waterFee}（${rentBill.rentNum!}人）</td>
+	                        <td>${waterFee!}（${rentBill.rentNum!}人）</td>
 	                        <td>${waterPayTypeName}</td>
 	                        <td></td>
 	                        <td></td>
@@ -110,11 +110,11 @@ td{
 	                        <td>房租</td>
 	                        <td>${rentBill.money!}</td>
 	                        <td colspan="3">${rentBill.startTime!}到${rentBill.endTime!}</td>
-	                        <td></td>
-	                        <td></td>
-	                        <td></td>
-	                        <td></td>
-	                        <td></td>
+	                        <td>${wan!}</td>
+	                        <td>${qian!}</td>
+	                        <td>${bai!}</td>
+	                        <td>${shi!}</td>
+	                        <td>${yuan!}</td>
 	                        <td></td>
 	                    </tr>
 	                    <tr>
@@ -142,14 +142,15 @@ td{
 	                        <td></td>
 	                    </tr>
 	                    <tr>
-	                        <td colspan="12" style="text-align: left;">
-	                           	 合计金额(大写)    ￥ ${rentBill.sum!}
+	                        <td colspan="5" style="text-align: left;border-right:0px;">
+	                           	 合计金额(大写): ${bigSum!}
 	                        </td>
+	                        <td colspan="7" style="border-left:0px;">合计(小写):￥ ${rentBill.sum!}</td>
 	                    </tr>
 	                </table>
 	            </div>
 	            <div class="c-foot">
-	            	<table style="margin-top:10px;">
+	            	<table style="margin-top:3px;">
 	            		<tr>
 	            			<td width="60%" style="text-align:left;">开票人:</td>
 	            			<td width="40%">客户签字:</td>

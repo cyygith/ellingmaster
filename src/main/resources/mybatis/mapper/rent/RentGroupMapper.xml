@@ -32,15 +32,15 @@
 		FROM
 			RENT_GROUP T
 		<where>
-			<if test="id!=null and id != ''">T.ID = #{id}</if>
-			<if test="groupCode!=null and groupCode != ''">T.GROUP_CODE = #{groupCode}</if>
-			<if test="groupName!=null and groupName != ''">T.GROUP_NAME = #{groupName}</if>
-			<if test="groupAddress!=null and groupAddress != ''">T.GROUP_ADDRESS = #{groupAddress}</if>
-			<if test="status!=null and status != ''">T.STATUS = #{status}</if>
-			<if test="orderNum!=null and orderNum != ''">T.ORDER_NUM = #{orderNum}</if>
-			<if test="remark!=null and remark != ''">T.REMARK = #{remark}</if>
-			<if test="createTime!=null and createTime != ''">T.CREATE_TIME = #{createTime}</if>
-			<if test="updateTime!=null and updateTime != ''">T.UPDATE_TIME = #{updateTime}</if>
+			<if test="id!=null and id != ''">AND T.ID = #{id}</if>
+			<if test="groupCode!=null and groupCode != ''">AND T.GROUP_CODE = #{groupCode}</if>
+			<if test="groupName!=null and groupName != ''">AND T.GROUP_NAME = #{groupName}</if>
+			<if test="groupAddress!=null and groupAddress != ''">AND T.GROUP_ADDRESS = #{groupAddress}</if>
+			<if test="status!=null and status != ''">AND T.STATUS = #{status}</if>
+			<if test="orderNum!=null and orderNum != ''">AND T.ORDER_NUM = #{orderNum}</if>
+			<if test="remark!=null and remark != ''">AND T.REMARK = #{remark}</if>
+			<if test="createTime!=null and createTime != ''">AND T.CREATE_TIME = #{createTime}</if>
+			<if test="updateTime!=null and updateTime != ''">AND T.UPDATE_TIME = #{updateTime}</if>
 		</where>
   </select>
   <sql id="BaseColumn">

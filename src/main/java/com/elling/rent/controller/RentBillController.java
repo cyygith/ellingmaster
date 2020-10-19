@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.elling.common.entity.Result;
 import com.elling.common.utils.DateUtil;
+import com.elling.common.utils.MoneyUtil;
 import com.elling.common.utils.StringUtil;
 import com.elling.common.utils.pdf.Generator;
 import com.elling.rent.Constant;
@@ -355,12 +356,45 @@ public class RentBillController {
     				waterFee = rentNum * 10L;
     			}
     			
+    			//小写
+    			String yuan = "";
+    			String shi = "";
+    			String bai = "";
+    			String qian = "";
+    			String wan = "";
+    			
+    			
+    			//大写总值
+    			String bigSum = "";
+    			String sum = rb.getSum();
+    			if(StringUtil.isNotEmpty(sum)) {
+    				Double dsum = Double.parseDouble(sum);
+    				bigSum = MoneyUtil.convert(dsum);
+    				
+    				String iSum = sum.indexOf(".")!=-1?sum.substring(0,sum.indexOf(".")):sum;
+    				int len = iSum.length();
+    				 yuan = len>=1?iSum.substring(len -1):"";
+    				 shi = len>=2?iSum.substring(len -2,len-1):"";
+    				 bai = len>=3?iSum.substring(len -3,len-2):"";
+    				 qian = len>=4?iSum.substring(len -4,len-3):"";
+    				 wan = len>=5?iSum.substring(len -5,len-4):"";
+    			}
+    			
+    			
     			dataMap.put("CodeNum", CodeNum);
     			dataMap.put("waterPayTypeName", waterPayTypeName);
     			dataMap.put("waterFee", (waterFee==0?"":waterFee));
-    			dataMap.put("eleFee", (eleFee==0?"":eleFee));
+    			dataMap.put("eleFee", eleFee);
     			dataMap.put("rentBill", rb);
     			dataMap.put("startTime", startTime);
+    			dataMap.put("bigSum", bigSum);
+    			
+    			dataMap.put("yuan", yuan);
+    			dataMap.put("shi", shi);
+    			dataMap.put("bai", bai);
+    			dataMap.put("qian", qian);
+    			dataMap.put("wan", wan);
+    			
         		OutputStream out = httpServletResponse.getOutputStream();
 				Generator.pdfGenerateToResponse("rentReceipt.ftl", dataMap, null, PageSize.A4, "", true, null, out);
         		out.close();

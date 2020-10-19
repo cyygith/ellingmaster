@@ -38,18 +38,18 @@
 		FROM
 			RENT_HOUSE T
 		<where>
-			<if test="id!=null and id != ''">T.ID = #{id}</if>
-			<if test="houseCode!=null and houseCode != ''">T.HOUSE_CODE = #{houseCode}</if>
-			<if test="houseName!=null and houseName != ''">T.HOUSE_NAME = #{houseName}</if>
-			<if test="groupCode!=null and groupCode != ''">T.GROUP_CODE = #{groupCode}</if>
-			<if test="houseAddress!=null and houseAddress != ''">T.HOUSE_ADDRESS = #{houseAddress}</if>
-			<if test="houseArea!=null and houseArea != ''">T.HOUSE_AREA = #{houseArea}</if>
-			<if test="housePrice!=null and housePrice != ''">T.HOUSE_PRICE = #{housePrice}</if>
-			<if test="status!=null and status != ''">T.STATUS = #{status}</if>
-			<if test="orderNum!=null and orderNum != ''">T.ORDER_NUM = #{orderNum}</if>
-			<if test="remark!=null and remark != ''">T.REMARK = #{remark}</if>
-			<if test="createTime!=null and createTime != ''">T.CREATE_TIME = #{createTime}</if>
-			<if test="updateTime!=null and updateTime != ''">T.UPDATE_TIME = #{updateTime}</if>
+			<if test="id!=null and id != ''">AND T.ID = #{id}</if>
+			<if test="houseCode!=null and houseCode != ''">AND T.HOUSE_CODE = #{houseCode}</if>
+			<if test="houseName!=null and houseName != ''">AND T.HOUSE_NAME = #{houseName}</if>
+			<if test="groupCode!=null and groupCode != ''">AND T.GROUP_CODE = #{groupCode}</if>
+			<if test="houseAddress!=null and houseAddress != ''">AND T.HOUSE_ADDRESS = #{houseAddress}</if>
+			<if test="houseArea!=null and houseArea != ''">AND T.HOUSE_AREA = #{houseArea}</if>
+			<if test="housePrice!=null and housePrice != ''">AND T.HOUSE_PRICE = #{housePrice}</if>
+			<if test="status!=null and status != ''">AND T.STATUS = #{status}</if>
+			<if test="orderNum!=null and orderNum != ''">AND T.ORDER_NUM = #{orderNum}</if>
+			<if test="remark!=null and remark != ''">AND T.REMARK = #{remark}</if>
+			<if test="createTime!=null and createTime != ''">AND T.CREATE_TIME = #{createTime}</if>
+			<if test="updateTime!=null and updateTime != ''">AND T.UPDATE_TIME = #{updateTime}</if>
 		</where>
   </select>
   <sql id="BaseColumn">

@@ -16,5 +16,5 @@ public interface RentContractMapper extends MyMapper<RentContract> {
 	 * @param map
 	 * @return
 	 */
-	public List<Map<String,Object>> getByCondition(RentContract rentContract);
+	public List<RentContract> getByCondition(RentContract rentContract);
 }

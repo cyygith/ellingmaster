@@ -21,7 +21,7 @@ public class RentContractServiceImpl extends AbstractService<RentContract> imple
     private RentContractMapper rentContractMapper;
     
 	@Override
-	public List<Map<String,Object>> getByCondition(RentContract rentContract) {
+	public List<RentContract> getByCondition(RentContract rentContract) {
 		return rentContractMapper.getByCondition(rentContract);
 	}
 }

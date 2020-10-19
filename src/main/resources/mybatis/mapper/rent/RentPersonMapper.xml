@@ -44,21 +44,21 @@
 		FROM
 			RENT_PERSON T
 		<where>
-			<if test="id!=null and id != ''">T.ID = #{id}</if>
-			<if test="personCode!=null and personCode != ''">T.PERSON_CODE = #{personCode}</if>
-			<if test="personName!=null and personName != ''">T.PERSON_NAME = #{personName}</if>
-			<if test="identCard!=null and identCard != ''">T.IDENT_CARD = #{identCard}</if>
-			<if test="identAddr!=null and identAddr != ''">T.IDENT_ADDR = #{identAddr}</if>
-			<if test="tel!=null and tel != ''">T.TEL = #{tel}</if>
-			<if test="email!=null and email != ''">T.EMAIL = #{email}</if>
-			<if test="emergencyPerson!=null and emergencyPerson != ''">T.EMERGENCY_PERSON = #{emergencyPerson}</if>
-			<if test="emergencyTel!=null and emergencyTel != ''">T.EMERGENCY_TEL = #{emergencyTel}</if>
-			<if test="gender!=null and gender != ''">T.GENDER = #{gender}</if>
-			<if test="status!=null and status != ''">T.STATUS = #{status}</if>
-			<if test="orderNum!=null and orderNum != ''">T.ORDER_NUM = #{orderNum}</if>
-			<if test="remark!=null and remark != ''">T.REMARK = #{remark}</if>
-			<if test="createTime!=null and createTime != ''">T.CREATE_TIME = #{createTime}</if>
-			<if test="updateTime!=null and updateTime != ''">T.UPDATE_TIME = #{updateTime}</if>
+			<if test="id!=null and id != ''">AND T.ID = #{id}</if>
+			<if test="personCode!=null and personCode != ''">AND T.PERSON_CODE = #{personCode}</if>
+			<if test="personName!=null and personName != ''">AND T.PERSON_NAME = #{personName}</if>
+			<if test="identCard!=null and identCard != ''">AND T.IDENT_CARD = #{identCard}</if>
+			<if test="identAddr!=null and identAddr != ''">AND T.IDENT_ADDR = #{identAddr}</if>
+			<if test="tel!=null and tel != ''">AND T.TEL = #{tel}</if>
+			<if test="email!=null and email != ''">AND T.EMAIL = #{email}</if>
+			<if test="emergencyPerson!=null and emergencyPerson != ''">AND T.EMERGENCY_PERSON = #{emergencyPerson}</if>
+			<if test="emergencyTel!=null and emergencyTel != ''">AND T.EMERGENCY_TEL = #{emergencyTel}</if>
+			<if test="gender!=null and gender != ''">AND T.GENDER = #{gender}</if>
+			<if test="status!=null and status != ''">AND T.STATUS = #{status}</if>
+			<if test="orderNum!=null and orderNum != ''">AND T.ORDER_NUM = #{orderNum}</if>
+			<if test="remark!=null and remark != ''">AND T.REMARK = #{remark}</if>
+			<if test="createTime!=null and createTime != ''">AND T.CREATE_TIME = #{createTime}</if>
+			<if test="updateTime!=null and updateTime != ''">AND T.UPDATE_TIME = #{updateTime}</if>
 		</where>
   </select>
   <sql id="BaseColumn">

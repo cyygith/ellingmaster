@@ -110,7 +110,18 @@ public class RentContract {
      */
     @Column(name = "TENANT_ID")
     private String tenantId;
-
+    
+    /**
+     * 冗余数据  房间名
+     */
+    @Transient
+    private String houseName;
+    /**
+     * 冗余数据  用户名
+     */
+    @Transient
+    private String personName;
+    
     /**
      * @return ID
      */
@@ -419,4 +430,23 @@ public class RentContract {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
+
+	public String getHouseName() {
+		return houseName;
+	}
+
+	public void setHouseName(String houseName) {
+		this.houseName = houseName;
+	}
+
+	public String getPersonName() {
+		return personName;
+	}
+
+	public void setPersonName(String personName) {
+		this.personName = personName;
+	}
+	
+	
+	
 }
