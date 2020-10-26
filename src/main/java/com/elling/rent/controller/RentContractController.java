@@ -1,20 +1,4 @@
 package com.elling.rent.controller;
-import com.elling.rent.model.RentBill;
-import com.elling.rent.model.RentContract;
-import com.elling.rent.model.RentPerson;
-import com.elling.rent.service.RentContractService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.itextpdf.text.PageSize;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import org.apache.log4j.Logger;
-import java.util.List;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,11 +7,22 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.elling.common.entity.Result;
 import com.elling.common.utils.DateUtil;
-import com.elling.common.utils.MoneyUtil;
 import com.elling.common.utils.StringUtil;
 import com.elling.common.utils.pdf.Generator;
-import com.elling.common.entity.Result;
+import com.elling.rent.model.RentContract;
+import com.elling.rent.service.RentContractService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.itextpdf.text.PageSize;
 
 import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example.Criteria;
@@ -47,6 +42,7 @@ public class RentContractController {
     @RequestMapping("add")
     public Result add(@RequestBody RentContract rentContract) {
     	try {
+    		rentContract.setCreateTime(DateUtil.getNowTime());
 	        rentContractService.save(rentContract);
 	    }catch(Exception e) {
     		e.printStackTrace();
@@ -84,6 +80,7 @@ public class RentContractController {
     @RequestMapping("update")
     public Result update(@RequestBody RentContract rentContract) {
     	try {
+    		rentContract.setUpdateTime(DateUtil.getNowTime());
 		    rentContractService.update(rentContract);
 		}catch(Exception e) {
     		e.printStackTrace();
@@ -101,8 +98,10 @@ public class RentContractController {
     public Result saveOrUpdate(@RequestBody RentContract rentContract) {
     	try {
     		if(rentContract.getId()!=null) {
+    			rentContract.setUpdateTime(DateUtil.getNowTime());
     			rentContractService.update(rentContract);
     		}else {
+    			rentContract.setCreateTime(DateUtil.getNowTime());
     			rentContractService.save(rentContract);
     		}
 		    

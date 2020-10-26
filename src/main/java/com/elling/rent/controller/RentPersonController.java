@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.elling.common.utils.DateUtil;
 import com.elling.common.utils.StringUtil;
 import com.elling.common.entity.Result;
 
@@ -36,6 +38,7 @@ public class RentPersonController {
     @RequestMapping("add")
     public Result add(@RequestBody RentPerson rentPerson) {
     	try {
+    		rentPerson.setCreateTime(DateUtil.getNowTime());
 	        rentPersonService.save(rentPerson);
 	    }catch(Exception e) {
     		e.printStackTrace();
@@ -73,6 +76,7 @@ public class RentPersonController {
     @RequestMapping("update")
     public Result update(@RequestBody RentPerson rentPerson) {
     	try {
+    		rentPerson.setUpdateTime(DateUtil.getNowTime());
 		    rentPersonService.update(rentPerson);
 		}catch(Exception e) {
     		e.printStackTrace();
@@ -90,8 +94,10 @@ public class RentPersonController {
     public Result saveOrUpdate(@RequestBody RentPerson rentPerson) {
     	try {
     		if(rentPerson.getId()!=null) {
+    			rentPerson.setUpdateTime(DateUtil.getNowTime());
     			rentPersonService.update(rentPerson);
     		}else {
+    			rentPerson.setCreateTime(DateUtil.getNowTime());
     			rentPersonService.save(rentPerson);
     		}
 		    

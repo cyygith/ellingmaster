@@ -29,6 +29,9 @@
 			<if test="initialValue!=null and initialValue != ''">AND T.INITIAL_VALUE = #{initialValue}</if>
 		</where>
   </select>
+  <select id="getMaxValueByType" resultMap="customerMap">
+  		SELECT nextval(#{type}) maxVal from sequence
+  </select>
   <sql id="BaseColumn">
   		CURRENT_VALUE,INCREMENT,MAX_VALUE,INITIAL_VALUE
   </sql>

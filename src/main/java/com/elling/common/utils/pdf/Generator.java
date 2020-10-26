@@ -121,9 +121,12 @@ public class Generator {
 				if (fontname == null) {
 					/**
 					 * 操作系统需要有该字体, 没有则需要安装; 当然也可以将字体放到项目中， 再从项目中读取
+					 * MSungStd-Light  UniCNS-UCS2-H
+					 * MSung-Light  UniCNS-UCS2-H
+					 * STSong-Light UniGB-UCS2-H
 					 */
-					fontname = "STSong-Light";
-					encoding = "UniGB-UCS2-H";
+					fontname = "MSungStd-Light";
+					encoding = "UniCNS-UCS2-H";
 //					fontname = "SIMHEI";
 //					encoding = "UTF-8";
 //					以下这种方式是使用已有的字体，上面那种方式使用的是jar包里面的字体，在windows上面没问题，

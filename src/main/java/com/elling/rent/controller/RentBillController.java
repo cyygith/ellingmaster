@@ -46,6 +46,7 @@ public class RentBillController {
     @RequestMapping("add")
     public Result add(@RequestBody RentBill rentBill) {
     	try {
+    		rentBill.setCreateTime(DateUtil.getNowTime());
 	        rentBillService.save(rentBill);
 	    }catch(Exception e) {
     		e.printStackTrace();
@@ -83,6 +84,7 @@ public class RentBillController {
     @RequestMapping("update")
     public Result update(@RequestBody RentBill rentBill) {
     	try {
+    		rentBill.setUpdateTime(DateUtil.getNowTime());
 		    rentBillService.update(rentBill);
 		}catch(Exception e) {
     		e.printStackTrace();
@@ -154,8 +156,10 @@ public class RentBillController {
     public Result saveOrUpdate(@RequestBody RentBill rentBill) {
     	try {
     		if(rentBill.getId()!=null) {
+    			rentBill.setUpdateTime(DateUtil.getNowTime());
     			rentBillService.update(rentBill);
     		}else {
+    			rentBill.setCreateTime(DateUtil.getNowTime());
     			rentBillService.save(rentBill);
     		}
 		    
