@@ -17,4 +17,10 @@ public interface SequenceMapper extends MyMapper<Sequence> {
 	 * @return
 	 */
 	public List<Map<String,Object>> getByCondition(Sequence sequence);
+	/**
+	 *     根据类型获取当天  该业务类型最大值
+	 * @param map
+	 * @return
+	 */
+	public Sequence getMaxBusinessValueByType(Sequence sequence);
 }

@@ -7,6 +7,7 @@
     <result column="INCREMENT" jdbcType="BIGINT" property="increment" />
     <result column="MAX_VALUE" jdbcType="BIGINT" property="maxValue" />
     <result column="INITIAL_VALUE" jdbcType="BIGINT" property="initialValue" />
+    <result column="INITIAL_VALUE" jdbcType="BIGINT" property="initialValue" />
   </resultMap>
   <resultMap id="customerMap" type="java.util.HashMap">
     <id column="SEQUENCE_NAME" jdbcType="VARCHAR" property="sequenceName" />
@@ -29,8 +30,8 @@
 			<if test="initialValue!=null and initialValue != ''">AND T.INITIAL_VALUE = #{initialValue}</if>
 		</where>
   </select>
-  <select id="getMaxValueByType" resultMap="customerMap">
-  		SELECT nextval(#{type}) maxVal from sequence
+  <select id="getMaxValueByType" resultMap="BaseResultMap">
+  		SELECT nextval(#{sequenceName}) MAX_VALUE from sequence
   </select>
   <sql id="BaseColumn">
   		CURRENT_VALUE,INCREMENT,MAX_VALUE,INITIAL_VALUE

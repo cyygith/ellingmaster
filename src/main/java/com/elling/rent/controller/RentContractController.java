@@ -18,8 +18,10 @@ import com.elling.common.entity.Result;
 import com.elling.common.utils.DateUtil;
 import com.elling.common.utils.StringUtil;
 import com.elling.common.utils.pdf.Generator;
+import com.elling.rent.Constant;
 import com.elling.rent.model.RentContract;
 import com.elling.rent.service.RentContractService;
+import com.elling.sys.service.SequenceService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.itextpdf.text.PageSize;
@@ -38,11 +40,14 @@ public class RentContractController {
 	
     @Autowired
     RentContractService rentContractService;
+    @Autowired
+    SequenceService sequenceService;
 
     @RequestMapping("add")
     public Result add(@RequestBody RentContract rentContract) {
     	try {
     		rentContract.setCreateTime(DateUtil.getNowTime());
+    		rentContract.setContractCode(sequenceService.getMaxBusinessValueByType(Constant.CONTRACT_MODULE));
 	        rentContractService.save(rentContract);
 	    }catch(Exception e) {
     		e.printStackTrace();
@@ -102,6 +107,7 @@ public class RentContractController {
     			rentContractService.update(rentContract);
     		}else {
     			rentContract.setCreateTime(DateUtil.getNowTime());
+    			rentContract.setContractCode(sequenceService.getMaxBusinessValueByType(Constant.CONTRACT_MODULE));
     			rentContractService.save(rentContract);
     		}
 		    

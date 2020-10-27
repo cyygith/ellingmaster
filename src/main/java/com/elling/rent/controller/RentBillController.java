@@ -24,6 +24,7 @@ import com.elling.common.utils.pdf.Generator;
 import com.elling.rent.Constant;
 import com.elling.rent.model.RentBill;
 import com.elling.rent.service.RentBillService;
+import com.elling.sys.service.SequenceService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.itextpdf.text.PageSize;
@@ -42,6 +43,7 @@ public class RentBillController {
 	
     @Autowired
     RentBillService rentBillService;
+    
 
     @RequestMapping("add")
     public Result add(@RequestBody RentBill rentBill) {

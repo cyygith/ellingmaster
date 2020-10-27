@@ -1,7 +1,9 @@
 package com.elling.rent.controller;
+import com.elling.rent.Constant;
 import com.elling.rent.model.RentGroup;
 import com.elling.rent.model.RentPerson;
 import com.elling.rent.service.RentPersonService;
+import com.elling.sys.service.SequenceService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,11 +36,14 @@ public class RentPersonController {
 	
     @Autowired
     RentPersonService rentPersonService;
+    @Autowired
+    SequenceService sequenceService;
 
     @RequestMapping("add")
     public Result add(@RequestBody RentPerson rentPerson) {
     	try {
     		rentPerson.setCreateTime(DateUtil.getNowTime());
+    		rentPerson.setPersonCode(sequenceService.getMaxBusinessValueByType(Constant.PERSON_MODULE));
 	        rentPersonService.save(rentPerson);
 	    }catch(Exception e) {
     		e.printStackTrace();
@@ -98,6 +103,7 @@ public class RentPersonController {
     			rentPersonService.update(rentPerson);
     		}else {
     			rentPerson.setCreateTime(DateUtil.getNowTime());
+    			rentPerson.setPersonCode(sequenceService.getMaxBusinessValueByType(Constant.PERSON_MODULE));
     			rentPersonService.save(rentPerson);
     		}
 		    
