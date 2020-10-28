@@ -22,5 +22,5 @@ public interface SequenceMapper extends MyMapper<Sequence> {
 	 * @param map
 	 * @return
 	 */
-	public Sequence getMaxBusinessValueByType(Sequence sequence);
+	public Sequence getMaxValueByType(Sequence sequence);
 }

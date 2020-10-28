@@ -31,7 +31,7 @@
 		</where>
   </select>
   <select id="getMaxValueByType" resultMap="BaseResultMap">
-  		SELECT nextval(#{sequenceName}) MAX_VALUE from sequence
+  		SELECT nextval(#{sequenceName}) MAX_VALUE
   </select>
   <sql id="BaseColumn">
   		CURRENT_VALUE,INCREMENT,MAX_VALUE,INITIAL_VALUE

@@ -38,13 +38,13 @@ public class SequenceServiceImpl extends AbstractService<Sequence> implements Se
 		String max_value = "";
 		Sequence sq = new Sequence();
 		sq.setSequenceName(type+TYPE_SUFFIX);
-		sq = sequenceMapper.getMaxBusinessValueByType(sq);
+		sq = sequenceMapper.getMaxValueByType(sq);
 		if(null!=sq&&StringUtil.isNotEmpty(sq.getMaxValue())) {
 			max_value = StringUtil.getString(sq.getMaxValue());
 		}else {
 			max_value = "10000";
 		}
-		sb.append(type).append(DateUtil.getNowTime()).append(max_value);
+		sb.append(type).append(DateUtil.getNowDate1()).append(max_value);
 		
 		return sb.toString();
 	}
