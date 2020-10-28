@@ -1,7 +1,9 @@
 package com.elling.rent.controller;
 import com.elling.rent.Constant;
+import com.elling.rent.model.RentBill;
 import com.elling.rent.model.RentGroup;
 import com.elling.rent.model.RentHouse;
+import com.elling.rent.service.RentBillService;
 import com.elling.rent.service.RentGroupService;
 import com.elling.sys.service.SequenceService;
 import com.github.pagehelper.PageHelper;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.apache.log4j.Logger;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +42,8 @@ public class RentGroupController {
     RentGroupService rentGroupService;
     @Autowired
     SequenceService sequenceService;
+    @Autowired
+    RentBillService rentBillService;
 
     @RequestMapping("add")
     public Result add(@RequestBody RentGroup rentGroup) {
@@ -199,5 +205,63 @@ public class RentGroupController {
     		logger.error(e.getMessage());
     		return Result.error(e.getMessage());
     	}
+    }
+    @RequestMapping("getListByGroup")
+    public Result getListByGroup(RentBill rentBill) {
+    	Map<String,Object> rMap = new HashMap<String,Object>();
+    	try {
+    		List<Map<String,Object>> list = rentBillService.getListByGroup(rentBill);
+    		if(list!=null && list.size()>0) {
+    			List tempList = new ArrayList();
+    			for(Map m:list) {
+    				String groupCode = StringUtil.getString(m.get("groupCode"));
+    				String groupName = StringUtil.getString(m.get("groupName"));
+    				String houseCode = StringUtil.getString(m.get("houseCode"));
+    				
+    				if(rMap.get(groupCode)==null) {
+    					Map<String,Object> tempMap = new HashMap<String,Object>();
+    					tempMap.put("label", groupName);
+    					tempMap.put("value", groupCode);
+    					rMap.put(groupCode,tempMap);
+    					
+    					if(((List)((Map)rMap.get(groupCode)).get("option"))==null) {
+    						tempList = new ArrayList();
+        					tempList.add(m);
+        					tempMap.put("option", tempList);
+    					}
+    					
+    				}else {
+//    					((List)rMap.get(groupCode)).add(m);
+    					((List)((Map)rMap.get(groupCode)).get("option")).add(m);
+    				}
+    				
+    				
+//    				if(rMap.get(groupCode)==null) {
+//    					
+//    					
+//    					((Map)rMap.get(groupCode)).get("value")==null
+//    					
+//    					Map<String,Object> tempMap = new HashMap<String,Object>();
+//    					tempMap.put("label", groupName);
+//    					tempMap.put("value", groupCode);
+//    					
+//    					tempList = new ArrayList();
+//    					tempList.add(m);
+//    					tempMap.put("option", tempList);
+//    					
+//    					rMap.put(groupCode,tempMap);
+//    				}else {
+////    					((List)rMap.get(groupCode)).add(m);
+//    					((List)((Map)rMap.get(groupCode)).get("option")).add(m);
+//    				}
+    			}
+    		}
+
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+        return Result.success(rMap);
     }
 }
