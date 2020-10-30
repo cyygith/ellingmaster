@@ -3,6 +3,7 @@
 <mapper namespace="com.elling.rent.dao.mapper.RentBillMapper">
   <resultMap id="BaseResultMap" type="com.elling.rent.model.RentBill">
     <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="BILL_CODE" jdbcType="VARCHAR" property="billCode" />
     <result column="CONTRACT_CODE" jdbcType="VARCHAR" property="contractCode" />
     <result column="HOUSE_CODE" jdbcType="VARCHAR" property="houseCode" />
     <result column="MONEY" jdbcType="VARCHAR" property="money" />
@@ -29,6 +30,7 @@
   <resultMap id="customerMap" type="java.util.HashMap">
     <id column="ID" jdbcType="BIGINT" property="id" />
     <result column="ID" jdbcType="BIGINT" property="id" />
+    <result column="BILL_CODE" jdbcType="VARCHAR" property="billCode" />
     <result column="CONTRACT_CODE" jdbcType="VARCHAR" property="contractCode" />
     <result column="GROUP_CODE" jdbcType="VARCHAR" property="groupCode" />
     <result column="GROUP_NAME" jdbcType="VARCHAR" property="groupName" />
@@ -132,9 +134,9 @@
   
   
   <sql id="BaseColumn">
-  		ID,CONTRACT_CODE,HOUSE_CODE,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID
+  		ID,BILL_CODE,CONTRACT_CODE,HOUSE_CODE,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID
   </sql>
   <sql id="CustBaseColumn">
-  		T.ID,T.CONTRACT_CODE,T.HOUSE_CODE,T.MONEY,T.START_TIME,T.END_TIME,T.LAST_ELECTRIC,T.CURR_ELECTRIC,T.WATER_PAY_TYPE,T.RENT_NUM,T.LAST_WATER,T.CURR_WATER,T.PAY_TYPE,T.STATUS,T.ORDER_NUM,T.REMARK,T.SUM,T.CREATE_TIME,T.UPDATE_TIME,T.TENANT_ID
+  		T.ID,T.BILL_CODE,T.CONTRACT_CODE,T.HOUSE_CODE,T.MONEY,T.START_TIME,T.END_TIME,T.LAST_ELECTRIC,T.CURR_ELECTRIC,T.WATER_PAY_TYPE,T.RENT_NUM,T.LAST_WATER,T.CURR_WATER,T.PAY_TYPE,T.STATUS,T.ORDER_NUM,T.REMARK,T.SUM,T.CREATE_TIME,T.UPDATE_TIME,T.TENANT_ID
   </sql>
 </mapper>

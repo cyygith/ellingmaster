@@ -43,6 +43,8 @@ public class RentBillController {
 	
     @Autowired
     RentBillService rentBillService;
+    @Autowired
+    SequenceService sequenceService;
     
 
     @RequestMapping("add")
@@ -115,6 +117,7 @@ public class RentBillController {
     				RentBill rb = new RentBill();
             		BeanUtils.copyProperties(rb, tmpRb);
             		rb.setId(null);
+            		rb.setBillCode(sequenceService.getMaxBusinessValueByType(Constant.BILL_MODULE));
             		rb.setStartTime(tmpRb.getEndTime());
             		rb.setEndTime("");
             		

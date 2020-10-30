@@ -8,7 +8,12 @@ public class RentBill {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    /**
+     * 合同编号
+     */
+    @Column(name = "BILL_CODE")
+    private String billCode;
     /**
      * 合同编号
      */
@@ -533,6 +538,14 @@ public class RentBill {
 
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String getBillCode() {
+		return billCode;
+	}
+
+	public void setBillCode(String billCode) {
+		this.billCode = billCode;
 	}
     
     
