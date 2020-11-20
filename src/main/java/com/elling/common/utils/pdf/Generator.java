@@ -125,8 +125,10 @@ public class Generator {
 					 * MSung-Light  UniCNS-UCS2-H
 					 * STSong-Light UniGB-UCS2-H
 					 */
-					fontname = "MSungStd-Light";
-					encoding = "UniCNS-UCS2-H";
+					fontname = "STSong-Light";
+					encoding = "UniGB-UCS2-H";
+//					fontname = "MSungStd-Light";
+//					encoding = "UniCNS-UCS2-H";
 //					fontname = "SIMHEI";
 //					encoding = "UTF-8";
 //					以下这种方式是使用已有的字体，上面那种方式使用的是jar包里面的字体，在windows上面没问题，
