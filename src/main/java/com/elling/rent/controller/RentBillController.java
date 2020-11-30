@@ -336,7 +336,7 @@ public class RentBillController {
     			//收据编号
     			String CodeNum = DateUtil.getDateTime();
     			//开票时间
-    			String startTime = rb.getEndTime();
+    			String startTime = rb.getStartTime();
     			if(StringUtil.isNotEmpty(startTime)) {
     				startTime = startTime.substring(0, 4)+"年"+startTime.substring(5,7)+"月"+startTime.substring(8,10)+"日";
     			}
