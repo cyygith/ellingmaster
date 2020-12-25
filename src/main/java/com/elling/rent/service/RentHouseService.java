@@ -17,4 +17,11 @@ public interface RentHouseService extends Service<RentHouse> {
 	 * @return
 	 */
 	public List<RentHouse> getByCondition(RentHouse rentHouse);
+	
+	/**
+	 *	根据自定义条件更新数据
+	 * @param map
+	 * @return
+	 */
+	public int updateByConditionSelective(RentHouse rentHouse);
 }

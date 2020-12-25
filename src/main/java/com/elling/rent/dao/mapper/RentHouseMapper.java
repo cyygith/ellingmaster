@@ -17,4 +17,6 @@ public interface RentHouseMapper extends MyMapper<RentHouse> {
 	 * @return
 	 */
 	public List<RentHouse> getByCondition(RentHouse rentHouse);
+	
+	public int updateByUniqueId(RentHouse rentHouse);
 }

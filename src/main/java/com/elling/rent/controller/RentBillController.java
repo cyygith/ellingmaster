@@ -1,5 +1,6 @@
 package com.elling.rent.controller;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,7 +24,9 @@ import com.elling.common.utils.StringUtil;
 import com.elling.common.utils.pdf.Generator;
 import com.elling.rent.Constant;
 import com.elling.rent.model.RentBill;
+import com.elling.rent.model.RentHouse;
 import com.elling.rent.service.RentBillService;
+import com.elling.rent.service.RentHouseService;
 import com.elling.sys.service.SequenceService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -43,6 +46,8 @@ public class RentBillController {
 	
     @Autowired
     RentBillService rentBillService;
+    @Autowired
+    RentHouseService rentHouseService;
     @Autowired
     SequenceService sequenceService;
     
@@ -100,8 +105,10 @@ public class RentBillController {
     /**
      * 收租，找到上个月的房租
      * 1、属期开始时间为上个属期的结束时间
-     * 2、上月度数为上个月的本度数
+     * 	属期的结束时间为下个月的同一时间
      * 
+     * 2、上月度数为上个月的本度数
+     * 	如果上个月的结束日期度数为空，则取上个月度数的开始时间
      * @param rentBill
      * @return
      */
@@ -110,30 +117,46 @@ public class RentBillController {
     	try {
     		
     		List<RentBill> rentBs = rentBillService.getByCondition(rentBill);
+    		String cacheType = Constant.CACHETYPE_NEW; //0-新增   1-缓存   2-全新
+    		Map<String,Object> parmMap = new HashMap<String,Object>();
     		if(null!=rentBs&&rentBs.size()>0) {
     			RentBill tmpRb = rentBs.get(0);
     			
-    			if(Constant.STATUS_USE.equals(tmpRb.getStatus())) {//如果有值,则证明上个月已经交了
+    			if(Constant.BILL_STATUS_FINISH.equals(tmpRb.getStatus())) {//如果有值,则证明上个月已经交了
+    				//更新rentHouse的状态为【出租中】
+    				RentHouse rentHouse = new RentHouse();
+    				rentHouse.setHouseCode(tmpRb.getHouseCode());
+    				rentHouse.setStatus(Constant.HOUSE_STATUS_RENT);//出租中
+    				rentHouseService.updateByConditionSelective(rentHouse);
+    				
     				RentBill rb = new RentBill();
             		BeanUtils.copyProperties(rb, tmpRb);
             		rb.setId(null);
             		rb.setBillCode(sequenceService.getMaxBusinessValueByType(Constant.BILL_MODULE));
             		rb.setStartTime(tmpRb.getEndTime());
-            		rb.setEndTime("");
+            		rb.setEndTime(DateUtil.getSpecifiedMonthBefore(tmpRb.getEndTime(), -1));
             		
             		rb.setLastElectric(tmpRb.getCurrElectric());
+            		if(!StringUtil.isNotEmpty(tmpRb.getCurrElectric()))
+            			rb.setLastElectric(tmpRb.getLastElectric());//如果上个月的当月电费为空的情况下，则取上个月的 上月电费（存在几个月一起计算电费的情况）
             		rb.setCurrElectric("");
             		rb.setLastWater(tmpRb.getCurrWater());
+            		if(!StringUtil.isNotEmpty(tmpRb.getCurrWater()))
+            			rb.setLastWater(tmpRb.getLastWater());//如果上个月的当月水费为空的情况下，则取上个月的 上月水费（存在几个月一起计算水费的情况）
             		rb.setCurrWater("");
-            		rb.setStatus(Constant.STATUS_NEW);
-            		rb.setRemark("");
+            		rb.setStatus(Constant.BILL_STATUS_ING);
+            		rb.setRemark(tmpRb.getRemark());
             		
             		rb.setCreateTime(DateUtil.getNowTime());
             		
+            		cacheType = Constant.CACHETYPE_NEW;
+            		parmMap.put("cacheType", cacheType);
             		rentBillService.save(rb);
-            		return Result.success(rb);
+            		return Result.success(rb,parmMap);
     			}else {
-    				return Result.success(tmpRb);
+    				cacheType = Constant.CACHETYPE_CACHE;
+    				parmMap.put("cacheType", cacheType);
+    				return Result.success(tmpRb,parmMap);
     			}
     			
     		}else {
@@ -142,7 +165,9 @@ public class RentBillController {
     			rbNew.setId(rentBill.getId());
     			List<RentBill> rbs = rentBillService.getByCondition(rbNew);
         		if(null!=rbs&&rbs.size()>0) rbNew = rbs.get(0);
-    			return Result.success(rbNew); 
+        		cacheType = Constant.CACHETYPE_ADD;
+        		parmMap.put("cacheType", cacheType);
+    			return Result.success(rbNew,parmMap); 
     		}
     		
 		}catch(Exception e) {
@@ -175,7 +200,40 @@ public class RentBillController {
     	}
 	    return Result.success();
     }
-
+    /**
+     * 更新bill的数据，并且设定租房的状态为 3（已出租）
+     * @param rentBill
+     * @return
+     */
+    @RequestMapping("updateBillAndSetRenting")
+    public Result updateBillAndSetRenting(@RequestBody RentBill rentBill) {
+    	try {
+    		if(!StringUtil.isNotEmpty(rentBill.getId())) {
+    			return Result.error("ID不能为空");
+    		}
+    		if(!StringUtil.isNotEmpty(rentBill.getHouseCode())) {
+    			return Result.error("房屋编号不能为空");
+    		}
+    		
+    		if(rentBill.getId()!=null) {
+    			//1、更新rentBill的情况
+    			rentBill.setStatus(Constant.BILL_STATUS_FINISH);
+    			rentBill.setUpdateTime(DateUtil.getNowTime());
+    			rentBillService.update(rentBill);
+    			//2、更新rentHouse的状态为【出租中】
+				RentHouse rentHouse = new RentHouse();
+				rentHouse.setHouseCode(rentBill.getHouseCode());
+				rentHouse.setStatus(Constant.HOUSE_STATUS_RENT);//出租中
+				rentHouseService.updateByConditionSelective(rentHouse);
+    		}
+		    
+		}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+	    return Result.success();
+    }
     @RequestMapping("detail")
     public Result detail(@RequestParam Long id) {
     	RentBill rentBill = null;
@@ -405,6 +463,8 @@ public class RentBillController {
     			dataMap.put("wan", wan);
     			
         		OutputStream out = httpServletResponse.getOutputStream();
+        		httpServletResponse.setContentType("application/force-download");
+        		httpServletResponse.setHeader("Content-Disposition", "attachment;filename*=UTF-8''"+URLEncoder.encode("房屋收据.pdf","UTF-8"));
 				Generator.pdfGenerateToResponse("rentReceipt.ftl", dataMap, null, PageSize.A4, "", true, null, out);
         		out.close();
         		System.out.println("生成pdf成功~~~");

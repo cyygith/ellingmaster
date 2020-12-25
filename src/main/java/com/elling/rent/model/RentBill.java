@@ -128,6 +128,17 @@ public class RentBill {
     private String tenantId;
     
     /**
+     * 创建人
+     */
+    @Column(name = "CREATE_USER")
+    private String createUser;
+
+    /**
+     * 创建部门
+     */
+    @Column(name = "CREATE_DEPT")
+    private String createDept;
+    /**
      * 冗余数据 排序字段
      */
     @Transient
@@ -137,6 +148,11 @@ public class RentBill {
      */
     @Transient
     private String houseName;
+    /**
+     * 冗余数据 
+     */
+    @Transient
+    private String houseId;
     /**
      * 冗余数据 
      */
@@ -547,7 +563,49 @@ public class RentBill {
 	public void setBillCode(String billCode) {
 		this.billCode = billCode;
 	}
-    
+
+	public String getHouseId() {
+		return houseId;
+	}
+
+	public void setHouseId(String houseId) {
+		this.houseId = houseId;
+	}
+	/**
+     * 获取创建人
+     *
+     * @return CREATE_USER - 创建人
+     */
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    /**
+     * 设置创建人
+     *
+     * @param createUser 创建人
+     */
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    /**
+     * 获取创建部门
+     *
+     * @return CREATE_DEPT - 创建部门
+     */
+    public String getCreateDept() {
+        return createDept;
+    }
+
+    /**
+     * 设置创建部门
+     *
+     * @param createDept 创建部门
+     */
+    public void setCreateDept(String createDept) {
+        this.createDept = createDept;
+    }
     
     
 }

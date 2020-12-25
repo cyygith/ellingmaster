@@ -15,6 +15,8 @@
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
     <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
   </resultMap>
   <resultMap id="customerMap" type="java.util.HashMap">
     <id column="ID" jdbcType="BIGINT" property="id" />
@@ -30,6 +32,8 @@
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
     <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
   </resultMap>
   <!--根据自定义条件查询-->
   <select id="getByCondition" resultMap="BaseResultMap">
@@ -52,7 +56,24 @@
 			<if test="updateTime!=null and updateTime != ''">AND T.UPDATE_TIME = #{updateTime}</if>
 		</where>
   </select>
+  <!-- 根据唯一编号（非主键）更新表格 -->
+  <update id="updateByUniqueId">
+  		UPDATE RENT_HOUSE
+  		<set>
+			<if test="houseName!=null">HOUSE_NAME = #{houseName}</if>
+			<if test="groupCode!=null">GROUP_CODE = #{groupCode}</if>
+			<if test="houseAddress!=null">HOUSE_ADDRESS = #{houseAddress}</if>
+			<if test="houseArea!=null">HOUSE_AREA = #{houseArea}</if>
+			<if test="housePrice!=null">HOUSE_PRICE = #{housePrice}</if>
+			<if test="status!=null">STATUS = #{status}</if>
+			<if test="orderNum!=null">ORDER_NUM = #{orderNum}</if>
+			<if test="remark!=null">REMARK = #{remark}</if>
+			<if test="createTime!=null">CREATE_TIME = #{createTime}</if>
+			<if test="updateTime!=null">UPDATE_TIME = #{updateTime}</if>
+  		</set>
+  		WHERE HOUSE_CODE = #{houseCode}
+  </update>
   <sql id="BaseColumn">
-  		ID,HOUSE_CODE,HOUSE_NAME,GROUP_CODE,HOUSE_ADDRESS,HOUSE_AREA,HOUSE_PRICE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID
+  		ID,HOUSE_CODE,HOUSE_NAME,GROUP_CODE,HOUSE_ADDRESS,HOUSE_AREA,HOUSE_PRICE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID,T.CREATE_USER,T.CREATE_DEPT
   </sql>
 </mapper>

@@ -32,7 +32,17 @@ public class RentConfig {
      */
     @Column(name = "REMARK")
     private String remark;
+    /**
+     * 创建人
+     */
+    @Column(name = "CREATE_USER")
+    private String createUser;
 
+    /**
+     * 创建部门
+     */
+    @Column(name = "CREATE_DEPT")
+    private String createDept;
     /**
      * 创建时间
      */
@@ -189,5 +199,40 @@ public class RentConfig {
      */
     public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
+    }
+    /**
+     * 获取创建人
+     *
+     * @return CREATE_USER - 创建人
+     */
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    /**
+     * 设置创建人
+     *
+     * @param createUser 创建人
+     */
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    /**
+     * 获取创建部门
+     *
+     * @return CREATE_DEPT - 创建部门
+     */
+    public String getCreateDept() {
+        return createDept;
+    }
+
+    /**
+     * 设置创建部门
+     *
+     * @param createDept 创建部门
+     */
+    public void setCreateDept(String createDept) {
+        this.createDept = createDept;
     }
 }

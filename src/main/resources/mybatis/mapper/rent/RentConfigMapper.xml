@@ -10,6 +10,8 @@
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
     <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
   </resultMap>
   <resultMap id="customerMap" type="java.util.HashMap">
     <id column="ID" jdbcType="BIGINT" property="id" />
@@ -20,6 +22,8 @@
     <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
     <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
     <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
   </resultMap>
   <!--根据自定义条件查询-->
   <select id="getByCondition" resultMap="BaseResultMap">
@@ -39,6 +43,6 @@
 		</where>
   </select>
   <sql id="BaseColumn">
-  		T.HOST_ID,T.HOST_NAME,T.STATUS,T.REMARK,T.CREATE_TIME,T.UPDATE_TIME,T.TENANT_ID
+  		T.HOST_ID,T.HOST_NAME,T.STATUS,T.REMARK,T.CREATE_TIME,T.UPDATE_TIME,T.TENANT_ID,T.CREATE_USER,T.CREATE_DEPT
   </sql>
 </mapper>
