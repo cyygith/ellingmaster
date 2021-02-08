@@ -2,6 +2,8 @@ package com.elling.rent.model;
 
 import javax.persistence.*;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Table(name = "rent_person")
 public class RentPerson {
     @Id
@@ -109,6 +111,14 @@ public class RentPerson {
      */
     @Column(name = "CREATE_DEPT")
     private String createDept;
+    
+    
+    /**
+     * 人员编号列表
+     */
+    @Transient
+    private String[] personCodes;
+    
     /**
      * @return ID
      */
@@ -417,4 +427,16 @@ public class RentPerson {
     public void setCreateDept(String createDept) {
         this.createDept = createDept;
     }
+
+	public String[] getPersonCodes() {
+		return personCodes;
+	}
+
+	public void setPersonCodes(String[] personCodes) {
+		this.personCodes = personCodes;
+	}
+    
+    
+    
+    
 }

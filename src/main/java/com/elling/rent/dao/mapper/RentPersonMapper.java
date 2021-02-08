@@ -1,7 +1,8 @@
 package com.elling.rent.dao.mapper;
 
 import java.util.List;
-import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 import com.elling.common.base.MyMapper;
 import com.elling.rent.model.RentPerson;
@@ -16,5 +17,13 @@ public interface RentPersonMapper extends MyMapper<RentPerson> {
 	 * @param map
 	 * @return
 	 */
-	public List<Map<String,Object>> getByCondition(RentPerson rentPerson);
+	public List<RentPerson> getByCondition(RentPerson rentPerson);
+	
+	/**
+	 *	批量新增用户
+	 * @param map
+	 * @return
+	 */
+	public void insertPersonBatch(@Param("list")List<RentPerson> rentPersonList);
+	
 }

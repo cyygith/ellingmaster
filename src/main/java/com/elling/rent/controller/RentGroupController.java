@@ -135,18 +135,15 @@ public class RentGroupController {
     
     @RequestMapping("getByCondition")
     public Result getByCondition(RentGroup rentGroup) {
-    	Map rMap = null;
     	try {
     		List<Map<String,Object>> list = rentGroupService.getByCondition(rentGroup);
-    		if(list!=null && list.size()>0) {
-    			rMap = list.get(0);
-    		}
+    		return Result.success(list);
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
     		return Result.error(e.getMessage());
     	}
-        return Result.success(rMap);
+        
     }
 
     @RequestMapping("list")

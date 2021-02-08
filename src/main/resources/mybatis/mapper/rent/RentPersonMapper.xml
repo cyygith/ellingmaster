@@ -42,7 +42,7 @@
     <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
   </resultMap>
   <!--根据自定义条件查询-->
-  <select id="getByCondition" resultMap="customerMap">
+  <select id="getByCondition" resultMap="BaseResultMap">
 	    SELECT
 			<include refid="BaseColumn"/>
 		FROM
@@ -50,6 +50,12 @@
 		<where>
 			<if test="id!=null and id != ''">AND T.ID = #{id}</if>
 			<if test="personCode!=null and personCode != ''">AND T.PERSON_CODE = #{personCode}</if>
+			<if test="personCodes!=null and personCodes != ''">
+				AND T.PERSON_CODE IN
+				<foreach item="item" collection="personCodes" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
 			<if test="personName!=null and personName != ''">AND T.PERSON_NAME = #{personName}</if>
 			<if test="identCard!=null and identCard != ''">AND T.IDENT_CARD = #{identCard}</if>
 			<if test="identAddr!=null and identAddr != ''">AND T.IDENT_ADDR = #{identAddr}</if>
@@ -65,7 +71,19 @@
 			<if test="updateTime!=null and updateTime != ''">AND T.UPDATE_TIME = #{updateTime}</if>
 		</where>
   </select>
+  <insert id="insertPersonBatch" parameterType="java.util.List">
+	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select LAST_INSERT_ID()
+	</selectKey>
+	INSERT INTO RENT_PERSON(PERSON_CODE,PERSON_NAME,IDENT_CARD,IDENT_ADDR,TEL,EMAIL,EMERGENCY_PERSON,EMERGENCY_TEL,GENDER,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID,CREATE_USER,CREATE_DEPT)
+	VALUES
+	<foreach collection="list" item="item" index="index" separator=",">
+		(
+		#{item.personCode},#{item.personName},#{item.identCard},#{item.identAddr},#{item.tel},#{item.email},#{item.emergencyPerson},#{item.emergencyTel},#{item.gender},#{item.status},#{item.orderNum},#{item.remark},#{item.createTime},#{item.updateTime},#{item.tenantId},#{item.createUser},#{item.createDept}
+		)
+	</foreach>
+  </insert>
   <sql id="BaseColumn">
-  		ID,PERSON_CODE,PERSON_NAME,IDENT_CARD,IDENT_ADDR,TEL,EMAIL,EMERGENCY_PERSON,EMERGENCY_TEL,GENDER,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID,T.CREATE_USER,T.CREATE_DEPT
+  		ID,PERSON_CODE,PERSON_NAME,IDENT_CARD,IDENT_ADDR,TEL,EMAIL,EMERGENCY_PERSON,EMERGENCY_TEL,GENDER,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID,CREATE_USER,CREATE_DEPT
   </sql>
 </mapper>

@@ -25,8 +25,10 @@ import com.elling.common.utils.pdf.Generator;
 import com.elling.rent.Constant;
 import com.elling.rent.model.RentBill;
 import com.elling.rent.model.RentHouse;
+import com.elling.rent.model.RentPerson;
 import com.elling.rent.service.RentBillService;
 import com.elling.rent.service.RentHouseService;
+import com.elling.rent.service.RentPersonService;
 import com.elling.sys.service.SequenceService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -46,6 +48,8 @@ public class RentBillController {
 	
     @Autowired
     RentBillService rentBillService;
+    @Autowired
+    RentPersonService rentPersonService;
     @Autowired
     RentHouseService rentHouseService;
     @Autowired
@@ -156,6 +160,17 @@ public class RentBillController {
     			}else {
     				cacheType = Constant.CACHETYPE_CACHE;
     				parmMap.put("cacheType", cacheType);
+    				
+    				//缓存的信息则获取用户信息
+    				if(tmpRb.getPersonCodes()!=null) {
+    					List<RentPerson> persons = null;
+    					String[] personCodeArr = tmpRb.getPersonCodes().split(",");
+    					RentPerson rentPerson = new RentPerson();
+    					rentPerson.setPersonCodes(personCodeArr);
+    					persons = rentPersonService.getByCondition(rentPerson);
+    					parmMap.put("persons", persons);
+    				}
+        			
     				return Result.success(tmpRb,parmMap);
     			}
     			
@@ -192,6 +207,33 @@ public class RentBillController {
     			rentBill.setCreateTime(DateUtil.getNowTime());
     			rentBillService.save(rentBill);
     		}
+		    
+		}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+	    return Result.success();
+    }
+    /**
+     * 根据开始时间和结束时间保存
+     * @param rentBill
+     * @return
+     */
+    @RequestMapping("saveOrUpdateBillAndPerson")
+    public Result saveOrUpdateBillAndPerson(@RequestBody RentBill rentBill) {
+    	try {
+    		rentBillService.saveOrUpdateBillAndPerson(rentBill);
+//    		if(rentBill.getId()!=null) {
+//    			rentBill.setUpdateTime(DateUtil.getNowTime());
+////    			rentBillService.update(rentBill);
+//    			
+//    			rentBillService.saveOrUpdateBillAndPerson(rentBill);
+//    			
+//    		}else {
+//    			rentBill.setCreateTime(DateUtil.getNowTime());
+//    			rentBillService.save(rentBill);
+//    		}
 		    
 		}catch(Exception e) {
     		e.printStackTrace();
@@ -249,18 +291,28 @@ public class RentBillController {
     
     @RequestMapping("getByCondition")
     public Result getByCondition(RentBill rentBill) {
-    	RentBill rMap = null;
+    	RentBill rBill = null;
+    	List<RentPerson> persons = null;
     	try {
     		List<RentBill> list = rentBillService.getByCondition(rentBill);
     		if(list!=null && list.size()>0) {
-    			rMap = list.get(0);
+    			rBill = list.get(0);
+    			
+    			if(rBill.getPersonCodes()!=null) {
+    				String[] personCodeArr = rBill.getPersonCodes().split(",");
+    				RentPerson rentPerson = new RentPerson();
+    				rentPerson.setPersonCodes(personCodeArr);
+    				persons = rentPersonService.getByCondition(rentPerson);
+    			}
     		}
+    		
+    		
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
     		return Result.error("查询错误："+e.getMessage());
     	}
-        return Result.success(rMap);
+        return Result.success(rBill,persons);
     }
 
     @RequestMapping("list")
@@ -478,4 +530,51 @@ public class RentBillController {
     	}
         return Result.success(rMap);
     }
+    
+    
+    
+    @RequestMapping("getRentSummaryGroup")
+    public Result getRentSummaryGroup(RentBill rentBill) {
+    	List<Map<String,Object>> rList = new ArrayList<Map<String,Object>>();
+    	try {
+    		rList = rentBillService.getRentSummaryGroup(rentBill);
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+        return Result.success(rList);
+    }
+    
+    @RequestMapping("getRentDetailByHouseCode")
+    public Result getRentDetailByHouseCode(RentBill rentBill) {
+    	List<Map<String,Object>> rList = new ArrayList<Map<String,Object>>();
+    	try {
+    		Map<String,Object> map = new HashMap<String,Object>();
+    		rList = rentBillService.getRentDetailByHouseCode(map);
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+        return Result.success(rList);
+    }
+    
+    @RequestMapping("getRentSummaryByMonth")
+    public Result getRentSummaryByMonth(RentBill rentBill) {
+    	List<Map<String,Object>> rList = new ArrayList<Map<String,Object>>();
+    	try {
+    		rList = rentBillService.getRentSummaryByMonth(rentBill);
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+        return Result.success(rList);
+    }
+    
+    
+    
+    
+    
 }

@@ -1,14 +1,14 @@
 package com.elling.rent.service.impl;
 
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.elling.common.base.AbstractService;
 import com.elling.rent.dao.mapper.RentPersonMapper;
 import com.elling.rent.model.RentPerson;
 import com.elling.rent.service.RentPersonService;
-import com.elling.common.base.AbstractService;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -21,7 +21,7 @@ public class RentPersonServiceImpl extends AbstractService<RentPerson> implement
     private RentPersonMapper rentPersonMapper;
     
 	@Override
-	public List<Map<String,Object>> getByCondition(RentPerson rentPerson) {
+	public List<RentPerson> getByCondition(RentPerson rentPerson) {
 		return rentPersonMapper.getByCondition(rentPerson);
 	}
 }

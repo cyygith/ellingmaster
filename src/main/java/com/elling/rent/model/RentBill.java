@@ -1,6 +1,13 @@
 package com.elling.rent.model;
 
-import javax.persistence.*;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Table(name = "rent_bill")
 public class RentBill {
@@ -138,6 +145,12 @@ public class RentBill {
      */
     @Column(name = "CREATE_DEPT")
     private String createDept;
+    
+    /**
+     * 租住人数列表
+     */
+    @Column(name = "PERSON_CODES")
+    private String personCodes;
     /**
      * 冗余数据 排序字段
      */
@@ -160,7 +173,20 @@ public class RentBill {
     private String groupCode;
     @Transient
     private String groupName;
-    
+    @Transient
+    private List<RentPerson> personList;
+    /**
+     * 冗余字段
+     * 是否显示houseCode
+     */
+    @Transient
+    private boolean showHouseCode;
+    /**
+     * 冗余字段
+     * 是否显示groupCode
+     */
+    @Transient
+    private boolean showGroupCode;
     /**
      * 冗余数据  剩余天数
      */
@@ -607,5 +633,46 @@ public class RentBill {
         this.createDept = createDept;
     }
     
+    /**
+     * 获取租住人数列表
+     *
+     * @return PERSON_CODES - 租住人数列表
+     */
+    public String getPersonCodes() {
+        return personCodes;
+    }
+
+    /**
+     * 设置租住人数列表
+     *
+     * @param personCodes 租住人数列表
+     */
+    public void setPersonCodes(String personCodes) {
+        this.personCodes = personCodes;
+    }
+
+	public List<RentPerson> getPersonList() {
+		return personList;
+	}
+
+	public void setPersonList(List<RentPerson> personList) {
+		this.personList = personList;
+	}
+
+	public boolean isShowHouseCode() {
+		return showHouseCode;
+	}
+
+	public void setShowHouseCode(boolean showHouseCode) {
+		this.showHouseCode = showHouseCode;
+	}
+
+	public boolean isShowGroupCode() {
+		return showGroupCode;
+	}
+
+	public void setShowGroupCode(boolean showGroupCode) {
+		this.showGroupCode = showGroupCode;
+	}
     
 }

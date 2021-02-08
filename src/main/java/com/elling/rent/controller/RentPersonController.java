@@ -129,18 +129,18 @@ public class RentPersonController {
     
     @RequestMapping("getByCondition")
     public Result getByCondition(RentPerson rentPerson) {
-    	Map rMap = null;
+    	RentPerson person = null;
     	try {
-    		List<Map<String,Object>> list = rentPersonService.getByCondition(rentPerson);
+    		List<RentPerson> list = rentPersonService.getByCondition(rentPerson);
     		if(list!=null && list.size()>0) {
-    			rMap = list.get(0);
+    			person = list.get(0);
     		}
     	}catch(Exception e) {
     		e.printStackTrace();
     		logger.error(e.getMessage());
     		return Result.error(e.getMessage());
     	}
-        return Result.success(rMap);
+        return Result.success(person);
     }
 
     @RequestMapping("list")

@@ -29,6 +29,7 @@
     <result column="HOUSE_ID" jdbcType="VARCHAR" property="houseId" />
     <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
     <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="PERSON_CODES" jdbcType="VARCHAR" property="personCodes" />
   </resultMap>
   <resultMap id="customerMap" type="java.util.HashMap">
     <id column="ID" jdbcType="BIGINT" property="id" />
@@ -59,6 +60,7 @@
     <result column="LEFT_DAYS" jdbcType="VARCHAR" property="leftDays" />
     <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
     <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="PERSON_CODES" jdbcType="VARCHAR" property="personCodes" />
   </resultMap>
   <!--根据自定义条件查询-->
   <select id="getByCondition" resultMap="BaseResultMap">
@@ -72,7 +74,9 @@
 			<if test="contractCode!=null and contractCode != ''">AND T.CONTRACT_CODE = #{contractCode}</if>
 			<if test="houseCode!=null and houseCode != ''">AND T.HOUSE_CODE = #{houseCode}</if>
 			<if test="money!=null and money != ''">AND T.MONEY = #{money}</if>
-			<if test="startTime!=null and startTime != ''">AND T.START_TIME = #{startTime}</if>
+			<if test="startTime!=null and startTime != ''">
+				AND T.START_TIME LIKE CONCAT(#{startTime},'%')
+			</if>
 			<if test="endTime!=null and endTime != ''">AND T.END_TIME = #{endTime}</if>
 			<if test="lastElectric!=null and lastElectric != ''">AND T.LAST_ELECTRIC = #{lastElectric}</if>
 			<if test="currElectric!=null and currElectric != ''">AND T.CURR_ELECTRIC = #{currElectric}</if>
@@ -139,12 +143,75 @@
 			H.HOUSE_CODE = A.HOUSE_CODE
 		AND H.GROUP_CODE = G.GROUP_CODE
   </select>
+  <!-- 根据房间号统计所收租金总数 -->
+  <select id="getRentSummaryGroup" resultType="java.util.Map">	
+		SELECT
+			any_value(g.GROUP_CODE) as groupCode,
+			any_value(g.GROUP_NAME) as groupName,
+			any_value (h.HOUSE_NAME) AS houseName,
+			<if test="showHouseCode!=null and showHouseCode != ''">t.HOUSE_CODE as houseCode,</if>
+			SUM(t.MONEY) AS moneySum,
+			count(1) as countTime
+		FROM
+			rent_bill t,
+			rent_house h,
+			rent_group g
+		<where>
+			t.HOUSE_CODE = h.HOUSE_CODE and h.GROUP_CODE = g.GROUP_CODE
+			<if test="groupCode!=null and groupCode != ''">AND H.GROUP_CODE = #{groupCode}</if>
+		</where>
+		<choose>
+			<when test="showHouseCode!=null and showHouseCode != ''">
+				GROUP BY t.HOUSE_CODE
+			</when>
+			<otherwise>
+				GROUP BY g.GROUP_CODE
+			</otherwise>
+		</choose>
+		
+  </select>
+  <!--根据编号获取详细信息-->
+  <select id="getRentDetailByHouseCode" resultType="java.util.Map">	
+		SELECT
+			h.HOUSE_NAME,
+			t.HOUSE_CODE,
+			t.MONEY AS moneySum
+		FROM
+			rent_bill t,
+			rent_house h,
+			rent_group g
+		where t.HOUSE_CODE = h.HOUSE_CODE 
+			and h.GROUP_CODE = g.GROUP_CODE
+			AND t.STATUS = '1'
+		<if test="houseCode!=null and houseCode != ''">AND t.HOUSE_CODE = #{houseCode}</if>
+  </select>
+  <!-- 根据具体房间号，统计所收详细租金情况 -->
+  <select id="getRentSummaryByMonth" resultType="java.util.Map">
+	    SELECT
+			DATE_FORMAT(t.START_TIME, '%Y-%m') AS qYear,
+			SUM(t.MONEY) AS moneySum,
+			count(1) AS countTime
+		FROM
+			rent_bill t,
+			rent_house h,
+			rent_group g
+		WHERE
+			t.HOUSE_CODE = h.HOUSE_CODE
+		AND h.GROUP_CODE = g.GROUP_CODE
+		AND t.START_TIME is not null
+		AND t.START_TIME !=''
+		<if test="startTime!=null and startTime != ''">
+			AND DATE_FORMAT(t.START_TIME, '%Y') = #{startTime}
+		</if>
+		GROUP BY
+			DATE_FORMAT(t.START_TIME, '%Y-%m')
+  </select>
   
   
   <sql id="BaseColumn">
-  		ID,BILL_CODE,CONTRACT_CODE,HOUSE_CODE,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID,T.CREATE_USER,T.CREATE_DEPT
+  		ID,BILL_CODE,CONTRACT_CODE,HOUSE_CODE,T.PERSON_CODES,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID,CREATE_USER,CREATE_DEPT
   </sql>
   <sql id="CustBaseColumn">
-  		T.ID,T.BILL_CODE,T.CONTRACT_CODE,T.HOUSE_CODE,T.MONEY,T.START_TIME,T.END_TIME,T.LAST_ELECTRIC,T.CURR_ELECTRIC,T.WATER_PAY_TYPE,T.RENT_NUM,T.LAST_WATER,T.CURR_WATER,T.PAY_TYPE,T.STATUS,T.ORDER_NUM,T.REMARK,T.SUM,T.CREATE_TIME,T.UPDATE_TIME,T.TENANT_ID,T.CREATE_USER,T.CREATE_DEPT
+  		T.ID,T.BILL_CODE,T.CONTRACT_CODE,T.HOUSE_CODE,T.PERSON_CODES,T.MONEY,T.START_TIME,T.END_TIME,T.LAST_ELECTRIC,T.CURR_ELECTRIC,T.WATER_PAY_TYPE,T.RENT_NUM,T.LAST_WATER,T.CURR_WATER,T.PAY_TYPE,T.STATUS,T.ORDER_NUM,T.REMARK,T.SUM,T.CREATE_TIME,T.UPDATE_TIME,T.TENANT_ID,T.CREATE_USER,T.CREATE_DEPT
   </sql>
 </mapper>

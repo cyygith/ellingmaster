@@ -29,4 +29,26 @@ public interface RentBillMapper extends MyMapper<RentBill> {
 	 * @return
 	 */
 	public List<RentBill> monitorRentEndTime(RentBill rentBill);
+	
+	
+	/**
+	 *	根据房间号统计所收租金总数
+	 * @param map
+	 * @return
+	 */
+	public List<Map<String,Object>> getRentSummaryGroup(RentBill rentBill);
+	
+	/**
+	 *	根据时间，统计所收详细租金情况
+	 * @param map
+	 * @return
+	 */
+	public List<Map<String,Object>> getRentSummaryByMonth(RentBill rentBill);
+	
+	/**
+	 *	根据具体房间号，统计所收详细租金情况
+	 * @param map
+	 * @return
+	 */
+	public List<Map<String,Object>> getRentDetailByHouseCode(Map<String,Object> parmMap);
 }
