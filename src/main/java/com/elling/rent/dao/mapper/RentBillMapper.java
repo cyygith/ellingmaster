@@ -51,4 +51,23 @@ public interface RentBillMapper extends MyMapper<RentBill> {
 	 * @return
 	 */
 	public List<Map<String,Object>> getRentDetailByHouseCode(Map<String,Object> parmMap);
+	
+	
+	
+	/**
+	 *	获取收租总数及总次数
+	 * @param map
+	 * @return
+	 */
+	public Map<String,Object> getAllRentBillSum(Map<String,Object> parmMap);
+	
+	/**
+	 *	获取收租总间数
+	 * @param map
+	 * @return
+	 */
+	public Map<String,Object> getAllHouseCount(Map<String,Object> parmMap);
+	
+	
+	
 }

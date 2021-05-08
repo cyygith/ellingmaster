@@ -587,14 +587,16 @@ public class DateUtil {
 	public static String getSpecifiedMonthBefore(String specifiedDay,int mth) {
 		String monthBefore = "";
 		try {
-			Calendar c = Calendar.getInstance();
-			Date date = null;
-			date = new SimpleDateFormat("yy-MM-dd").parse(specifiedDay);
-			
-			c.setTime(date);
-			int month = c.get(Calendar.MONTH);
-			c.set(Calendar.MONTH,month - mth);
-			monthBefore = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+			if(StringUtil.isNotEmpty(specifiedDay)) {
+				Calendar c = Calendar.getInstance();
+				Date date = null;
+				date = new SimpleDateFormat("yy-MM-dd").parse(specifiedDay);
+				
+				c.setTime(date);
+				int month = c.get(Calendar.MONTH);
+				c.set(Calendar.MONTH,month - mth);
+				monthBefore = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+			}
 		
 		}catch(Exception e) {
 			throw new RuntimeException("时间格式错误"+e.getMessage());

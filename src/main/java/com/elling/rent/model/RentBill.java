@@ -198,6 +198,27 @@ public class RentBill {
      */
     @Transient
     private String allCount;
+    
+    /**
+     * 是否首次租住
+     */
+    @Column(name = "IS_FIRST_TIME_RENT")
+    private String isFirstTimeRent;
+    
+    /**
+     * 押金
+     */
+    @Column(name = "DEPOSIT")
+    private String deposit;
+    
+    /**
+     * 是否提前支付水费
+     */
+    @Column(name = "IS_WATER_PAY_BEFORE")
+    private String isWaterPayBefore;
+    
+    
+    
     /**
      * @return ID
      */
@@ -674,5 +695,30 @@ public class RentBill {
 	public void setShowGroupCode(boolean showGroupCode) {
 		this.showGroupCode = showGroupCode;
 	}
+
+	public String getIsFirstTimeRent() {
+		return isFirstTimeRent;
+	}
+
+	public void setIsFirstTimeRent(String isFirstTimeRent) {
+		this.isFirstTimeRent = isFirstTimeRent;
+	}
+
+	public String getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(String deposit) {
+		this.deposit = deposit;
+	}
+
+	public String getIsWaterPayBefore() {
+		return isWaterPayBefore;
+	}
+
+	public void setIsWaterPayBefore(String isWaterPayBefore) {
+		this.isWaterPayBefore = isWaterPayBefore;
+	}
     
+	
 }

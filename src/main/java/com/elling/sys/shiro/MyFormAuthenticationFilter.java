@@ -52,9 +52,29 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
 				return true;
 			}
 		}
-		
 		return allowed;
 	}
+	
+//	下面是rememberMe的功能参考
+//	@Override
+//	protected boolean isAccessAllowed(ServletRequest request,ServletResponse response,Object mappedValue){
+//		Subject subject = getSubject(request,response);
+//		
+//		//如果isAuthenticated 为false，证明不是登录过的，同时isRemember为true,证明是没登录直接通过记住我功能进来的
+//		if(!subject.isAuthenticated()&&subject.isRemembered()) {
+//			//获取session 看看是不是空的
+//			Session session = subject.getSession(true);
+//			
+//			//随便拿一个session的属性来看session当前是否为空，这里用userId，也可以使用在他属性
+//			if(session.getAttribute("userId") == null) {
+//				//如果是空的才初始化，否则每次都要初始化，项目会卡
+//				String username = subject.getPrincipal().toString();
+//			}
+//		}
+//		
+//		return subject.isAuthenticated() || subject.isRemembered();
+//	}
+	
 	
 	/**
 	 * 为respones设置header，实现跨域

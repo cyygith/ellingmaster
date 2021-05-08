@@ -12,5 +12,8 @@ public class Constants {
 	 */
 	public static String STATE_BLOCK = "0";
 	
+	public static String NO = "0";
+	public static String YES = "1";
+	
 	
 }

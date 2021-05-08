@@ -43,4 +43,18 @@
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 	<!-- authc 的过滤器 -->
 	<bean id="MyFormAuthenticationFilter" class="com.elling.sys.shiro.MyFormAuthenticationFilter"/>
+	<!-- rememberMe 配置 -->
+	<!-- <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="rememberMe"></constructor-arg>
+		<property name="httpOnly" value="true"></property>
+		<property name="maxAge" value="604800"></property>默认记住7天（单位：秒）
+	</bean> -->
+	<!-- rememberMe管理器 -->
+	<!-- <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+		<property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUsOKTA3Kprsdag==')}"></property>
+		<property name="cookie" ref="rememberMeCookie"></property>
+	</bean> -->
+	
+	
+	
 </beans>

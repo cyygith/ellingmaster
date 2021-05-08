@@ -30,6 +30,9 @@
     <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
     <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
     <result column="PERSON_CODES" jdbcType="VARCHAR" property="personCodes" />
+    <result column="IS_FIRST_TIME_RENT" jdbcType="VARCHAR" property="isFirstTimeRent" />
+    <result column="DEPOSIT" jdbcType="VARCHAR" property="deposit" />
+    <result column="IS_WATER_PAY_BEFORE" jdbcType="VARCHAR" property="isWaterPayBefore" />
   </resultMap>
   <resultMap id="customerMap" type="java.util.HashMap">
     <id column="ID" jdbcType="BIGINT" property="id" />
@@ -61,6 +64,9 @@
     <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
     <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
     <result column="PERSON_CODES" jdbcType="VARCHAR" property="personCodes" />
+    <result column="IS_FIRST_TIME_RENT" jdbcType="VARCHAR" property="isFirstTimeRent" />
+    <result column="DEPOSIT" jdbcType="VARCHAR" property="deposit" />
+    <result column="IS_WATER_PAY_BEFORE" jdbcType="VARCHAR" property="isWaterPayBefore" />
   </resultMap>
   <!--根据自定义条件查询-->
   <select id="getByCondition" resultMap="BaseResultMap">
@@ -90,6 +96,9 @@
 			<if test="remark!=null and remark != ''">AND T.REMARK = #{remark}</if>
 			<if test="createTime!=null and createTime != ''">AND T.CREATE_TIME = #{createTime}</if>
 			<if test="updateTime!=null and updateTime != ''">AND T.UPDATE_TIME = #{updateTime}</if>
+			<if test="isFirstTimeRent!=null and isFirstTimeRent != ''">AND T.IS_FIRST_TIME_RENT = #{isFirstTimeRent}</if>
+			<if test="deposit!=null and deposit != ''">AND T.DEPOSIT = #{deposit}</if>
+			<if test="deposit!=null and isWaterPayBefore != ''">AND T.IS_WATER_PAY_BEFORE = #{isWaterPayBefore}</if>
 		</where>
 		<choose>
 			<when test="orderBy!=null and orderBy != ''">
@@ -146,10 +155,12 @@
   <!-- 根据房间号统计所收租金总数 -->
   <select id="getRentSummaryGroup" resultType="java.util.Map">	
 		SELECT
-			any_value(g.GROUP_CODE) as groupCode,
-			any_value(g.GROUP_NAME) as groupName,
-			any_value (h.HOUSE_NAME) AS houseName,
-			<if test="showHouseCode!=null and showHouseCode != ''">t.HOUSE_CODE as houseCode,</if>
+			g.GROUP_CODE as groupCode,
+			g.GROUP_NAME as groupName,
+			<if test="showHouseCode!=null and showHouseCode != ''">
+			t.HOUSE_CODE as houseCode,
+			h.HOUSE_NAME AS houseName,
+			</if>
 			SUM(t.MONEY) AS moneySum,
 			count(1) as countTime
 		FROM
@@ -162,10 +173,10 @@
 		</where>
 		<choose>
 			<when test="showHouseCode!=null and showHouseCode != ''">
-				GROUP BY t.HOUSE_CODE
+				GROUP BY t.HOUSE_CODE,g.GROUP_CODE,g.GROUP_NAME,h.HOUSE_NAME
 			</when>
 			<otherwise>
-				GROUP BY g.GROUP_CODE
+				GROUP BY g.GROUP_CODE,g.GROUP_NAME
 			</otherwise>
 		</choose>
 		
@@ -206,12 +217,19 @@
 		GROUP BY
 			DATE_FORMAT(t.START_TIME, '%Y-%m')
   </select>
-  
+  <!-- 获取收租总数及总次数 -->
+  <select id="getAllRentBillSum" resultType="java.util.Map">
+	    select sum(t.MONEY) AS allMoney,count(1) as allCount from rent_bill t where t.status = '1'
+  </select>
+  <!-- 获取收租总间数 -->
+  <select id="getAllHouseCount" resultType="java.util.Map">
+	    select count(1) as allHouseCount from rent_house t;
+  </select>
   
   <sql id="BaseColumn">
-  		ID,BILL_CODE,CONTRACT_CODE,HOUSE_CODE,T.PERSON_CODES,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID,CREATE_USER,CREATE_DEPT
+  		ID,BILL_CODE,CONTRACT_CODE,HOUSE_CODE,T.PERSON_CODES,MONEY,START_TIME,END_TIME,LAST_ELECTRIC,CURR_ELECTRIC,WATER_PAY_TYPE,RENT_NUM,LAST_WATER,CURR_WATER,PAY_TYPE,STATUS,ORDER_NUM,REMARK,CREATE_TIME,UPDATE_TIME,TENANT_ID,CREATE_USER,CREATE_DEPT,IS_FIRST_TIME_RENT,DEPOSIT,IS_WATER_PAY_BEFORE
   </sql>
   <sql id="CustBaseColumn">
-  		T.ID,T.BILL_CODE,T.CONTRACT_CODE,T.HOUSE_CODE,T.PERSON_CODES,T.MONEY,T.START_TIME,T.END_TIME,T.LAST_ELECTRIC,T.CURR_ELECTRIC,T.WATER_PAY_TYPE,T.RENT_NUM,T.LAST_WATER,T.CURR_WATER,T.PAY_TYPE,T.STATUS,T.ORDER_NUM,T.REMARK,T.SUM,T.CREATE_TIME,T.UPDATE_TIME,T.TENANT_ID,T.CREATE_USER,T.CREATE_DEPT
+  		T.ID,T.BILL_CODE,T.CONTRACT_CODE,T.HOUSE_CODE,T.PERSON_CODES,T.MONEY,T.START_TIME,T.END_TIME,T.LAST_ELECTRIC,T.CURR_ELECTRIC,T.WATER_PAY_TYPE,T.RENT_NUM,T.LAST_WATER,T.CURR_WATER,T.PAY_TYPE,T.STATUS,T.ORDER_NUM,T.REMARK,T.SUM,T.CREATE_TIME,T.UPDATE_TIME,T.TENANT_ID,T.CREATE_USER,T.CREATE_DEPT,T.IS_FIRST_TIME_RENT,T.DEPOSIT,T.IS_WATER_PAY_BEFORE
   </sql>
 </mapper>

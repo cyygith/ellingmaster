@@ -1,6 +1,7 @@
 package com.elling.rent.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,6 +96,15 @@ public class RentBillServiceImpl extends AbstractService<RentBill> implements Re
 	@Override
 	public List<Map<String,Object>> getRentDetailByHouseCode(Map<String,Object> parmMap){
 		return rentBillMapper.getRentDetailByHouseCode(parmMap);
+	};
+	
+	public Map<String,Object> getRentAllSummary(Map<String,Object> parmMap){
+		Map<String,Object> summarySum = new HashMap<String,Object>();
+		Map tMap = rentBillMapper.getAllRentBillSum(parmMap);
+		Map rMap1 = rentBillMapper.getAllHouseCount(parmMap);
+		summarySum.putAll(tMap);
+		summarySum.putAll(rMap1);
+		return summarySum;
 	};
 
 }

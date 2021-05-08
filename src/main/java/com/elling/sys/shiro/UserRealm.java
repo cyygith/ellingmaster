@@ -85,7 +85,7 @@ public class UserRealm extends AuthorizingRealm{
         if(!Constants.STATE_OK.equals(StringUtil.getString(user.getStatus()))){
             throw new LockedAccountException("账户被锁定");
         }
-        //返回,并判断密码
+        //返回,并判断用户名/密码  的正确性
         return new SimpleAuthenticationInfo(user,user.getPassword(),getName());
         
 	}

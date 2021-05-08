@@ -62,7 +62,7 @@ td{
 	            	</table>
 	            </div>
 	            <div>
-	                <table border="1" style="font-weight:normal;width:100%;overflow:auto;margin:auto;">
+	                <table border="1" style="margin:0.5rem;font-weight:normal;width:100%;overflow:auto;margin:auto;">
 	                    <tr>
 	                        <td rowspan="2" width="15%">项目</td>
 	                        <td rowspan="2" width="12%">上月</td>
@@ -97,7 +97,7 @@ td{
 	                        <td>水费(吨)</td>
 	                        <td>${rentBill.lastWater!}</td>
 	                        <td>${rentBill.currWater!}</td>
-	                        <td>${waterFee!}（${rentBill.rentNum!}人）</td>
+	                        <td>${waterFee!}${numShow!}</td>
 	                        <td>${waterPayTypeName}</td>
 	                        <td></td>
 	                        <td></td>
@@ -119,7 +119,7 @@ td{
 	                    </tr>
 	                    <tr>
 	                        <td>押金</td>
-	                        <td></td>
+	                        <td>${deposit!}</td>
 	                        <td colspan="2">网费</td>
 	                        <td></td>
 	                        <td></td>

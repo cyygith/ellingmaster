@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.elling.common.constant.Constants;
 import com.elling.common.entity.Result;
 import com.elling.common.utils.DateUtil;
 import com.elling.common.utils.MoneyUtil;
@@ -133,6 +134,15 @@ public class RentBillController {
     				rentHouse.setStatus(Constant.HOUSE_STATUS_RENT);//出租中
     				rentHouseService.updateByConditionSelective(rentHouse);
     				
+    				/**
+    				 * .新增收租信息
+    				 * 1）根据上月的结束时间 设置本月的开始时间和技术时间（默认相隔一个月）
+    				 * 2）根据上个月电费设置本月的电费
+    				 * 3）根据上个月的水费设置本月的水费（按吨计算的情况下），按人数计算的情况下按人数设置（10月/人）的情况下收取）
+    				 * 4）是否为首次租住的，默认设置成否
+    				 * 5）
+    				 * 6）
+    				 */
     				RentBill rb = new RentBill();
             		BeanUtils.copyProperties(rb, tmpRb);
             		rb.setId(null);
@@ -151,6 +161,8 @@ public class RentBillController {
             		rb.setStatus(Constant.BILL_STATUS_ING);
             		rb.setRemark(tmpRb.getRemark());
             		
+            		rb.setIsFirstTimeRent("0");//是否首次租住  0-否 （默认为否）
+            		rb.setIsWaterPayBefore("1");//是否提前收取水费 1-默认提前收取水费
             		rb.setCreateTime(DateUtil.getNowTime());
             		
             		cacheType = Constant.CACHETYPE_NEW;
@@ -158,6 +170,9 @@ public class RentBillController {
             		rentBillService.save(rb);
             		return Result.success(rb,parmMap);
     			}else {
+    				/**
+    				 * .取缓存
+    				 */
     				cacheType = Constant.CACHETYPE_CACHE;
     				parmMap.put("cacheType", cacheType);
     				
@@ -175,6 +190,9 @@ public class RentBillController {
     			}
     			
     		}else {
+    			/**
+				 * .从无收租信息,全新缓存信息
+				 */
     			rentBillService.save(rentBill);
     			RentBill rbNew = new RentBill();
     			rbNew.setId(rentBill.getId());
@@ -434,7 +452,7 @@ public class RentBillController {
     }
     
     @RequestMapping("getPdf")
-    public Result getPdf(RentBill rentBill,HttpServletResponse httpServletResponse) {
+    public void getPdf(RentBill rentBill,HttpServletResponse httpServletResponse) {
     	Map rMap = new HashMap();
     	try {
     		Map<String,Object> dataMap = new HashMap<String,Object>();
@@ -465,14 +483,29 @@ public class RentBillController {
     			String waterPayTypeName = "";//水费付款方式
     			Long rentNum = rb.getRentNum();//租住人数
     			float waterFee = 0;
+    			String numShow = "";
     			if("1".equals(waterPayType)) {//按吨支付
     				waterPayTypeName = "5元/吨";
     				if(StringUtil.isNotEmpty(currWater)&&StringUtil.isNotEmpty(lastWater)) {
-        				waterFee = Float.parseFloat(currWater)-Float.parseFloat(lastWater);
+        				waterFee = (Float.parseFloat(currWater)-Float.parseFloat(lastWater))*5;
         			}
     			}else {
+    				rb.setLastWater("");//如果按人支付的情况下，则不显示吨数
+    				rb.setCurrWater("");//如果按人支付的情况下，则不显示吨数
+    				numShow = "("+rb.getRentNum()+"人)";
     				waterPayTypeName = "10元/人";
     				waterFee = rentNum * 10L;
+    			}
+    			
+    			//如果“是否提前收取水费”为0-否 的情况下，水费为0
+    			if(rb.getIsWaterPayBefore().equals(Constants.NO)) {
+    				waterFee = 0;
+    				rb.setRentNum(0L);
+    			}
+    			//如果为首次租住的情况下，才显示押金
+    			String deposit = "";
+    			if(rb.getIsFirstTimeRent().equals(Constants.YES)) {
+    				deposit = rb.getDeposit();
     			}
     			
     			//小写
@@ -502,6 +535,7 @@ public class RentBillController {
     			
     			dataMap.put("CodeNum", CodeNum);
     			dataMap.put("waterPayTypeName", waterPayTypeName);
+    			dataMap.put("numShow", numShow);
     			dataMap.put("waterFee", (waterFee==0?"":waterFee));
     			dataMap.put("eleFee", eleFee);
     			dataMap.put("rentBill", rb);
@@ -514,6 +548,8 @@ public class RentBillController {
     			dataMap.put("qian", qian);
     			dataMap.put("wan", wan);
     			
+    			dataMap.put("deposit", deposit);
+    			
         		OutputStream out = httpServletResponse.getOutputStream();
         		httpServletResponse.setContentType("application/force-download");
         		httpServletResponse.setHeader("Content-Disposition", "attachment;filename*=UTF-8''"+URLEncoder.encode("房屋收据.pdf","UTF-8"));
@@ -525,10 +561,10 @@ public class RentBillController {
     		}
     	}catch(Exception e) {
     		e.printStackTrace();
-    		logger.error(e.getMessage());
-    		return Result.error("生成错误："+e.getMessage());
+    		logger.error("程序出错："+e.getMessage());
+//    		return Result.error("生成错误："+e.getMessage());
     	}
-        return Result.success(rMap);
+//        return Result.success(rMap);
     }
     
     
@@ -573,7 +609,18 @@ public class RentBillController {
         return Result.success(rList);
     }
     
-    
+    @RequestMapping("getRentAllSummary")
+    public Result getRentAllSummary(RentBill rentBill) {
+    	Map<String,Object> rMap = new HashMap<String,Object>();
+    	try {
+    		rMap = rentBillService.getRentAllSummary(null);
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		logger.error(e.getMessage());
+    		return Result.error("查询错误："+e.getMessage());
+    	}
+        return Result.success(rMap);
+    }
     
     
     

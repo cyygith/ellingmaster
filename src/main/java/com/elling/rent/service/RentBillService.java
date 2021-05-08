@@ -61,5 +61,10 @@ public interface RentBillService extends Service<RentBill> {
 	 */
 	public List<Map<String,Object>> getRentDetailByHouseCode(Map<String,Object> parmMap);
 	
-	
+	/**
+	 *	获取统计信息
+	 * @param map
+	 * @return
+	 */
+	public Map<String,Object> getRentAllSummary(Map<String,Object> parmMap);
 }
